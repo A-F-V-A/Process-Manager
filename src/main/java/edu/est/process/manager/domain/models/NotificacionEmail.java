@@ -31,8 +31,8 @@ public class NotificacionEmail {
             props.put("mail.smtp.auth", "true");
 
             // Credenciales de autenticación del servidor de correo (cuenta de Gmail)
-            String username = "xxsigfridxxx@gmail.com";
-            String password = ""; 
+            String username = "correonotificacionprocesos@gmail.com";
+            String password = "juanda29";
 
             Session session = Session.getInstance(props,
                     new javax.mail.Authenticator() {

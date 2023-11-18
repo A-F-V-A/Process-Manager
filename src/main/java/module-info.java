@@ -4,6 +4,8 @@ module edu.est.library {
     requires java.desktop;
     requires java.sql;
     requires jakarta.mail;
+    requires org.apache.poi.poi;
+    requires org.apache.poi.ooxml;
 
     opens edu.est.process.manager.infrastructure to javafx.fmxl;
     exports edu.est.process.manager.infrastructure;

@@ -11,7 +11,7 @@ class NotificacionEmailTest {
     @Test
     void testNotifyEmail_TaskExpired() {
         Task task = new Task("Tarea 1",TaskStatus.PENDING, 5); // Tarea con duración de 5 minutos
-        NotificacionEmail notification = new NotificacionEmail("juand.lopezm@uqvirtual.edu.co", "Recordatorio", task);
+        NotificacionEmail notification = new NotificacionEmail("correonotificacionprocesos@gmail.com", "Recordatorio", task);
 
         // Avanzar el tiempo para que la tarea expire
         advanceTime(task, 6);
