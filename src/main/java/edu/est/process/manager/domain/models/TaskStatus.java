@@ -1,7 +1,7 @@
 package edu.est.process.manager.domain.models;
 
 import java.util.concurrent.Delayed;
-
+import java.io.Serializable;
 /**
  * Enumeration for task status options.
  */
@@ -23,4 +23,6 @@ public enum TaskStatus {
     public String toString() {
         return this.status;
     }
+
+
 }

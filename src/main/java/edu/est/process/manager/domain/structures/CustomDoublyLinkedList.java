@@ -1,6 +1,7 @@
 package edu.est.process.manager.domain.structures;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;

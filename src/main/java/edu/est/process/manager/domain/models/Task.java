@@ -1,15 +1,25 @@
 package edu.est.process.manager.domain.models;
 
 
+import com.google.gson.JsonObject;
+import edu.est.process.manager.domain.util.IDGenerator;
+
+import java.io.Serializable;
+
 /**
  * Represents a task within a process or activity.
  */
 public class Task {
     private String description;
+    private String id;
     private TaskStatus status;
     private long starTime;
     private int durationMinutes;
     private boolean notification;
+
+
+    public Task(){}
+
 
     /**
      * Constructor for creating a new Task instance.
@@ -24,6 +34,7 @@ public class Task {
         this.durationMinutes = durationMinutes;
         this.starTime = System.currentTimeMillis();
         this.notification = false;
+        this.id = IDGenerator.generateID();
     }
 
 
@@ -78,6 +89,23 @@ public class Task {
         notification.removeCompletedTask(this);
     }
 
+
+    public JsonObject toJson(){
+        JsonObject task = new JsonObject();
+        task.addProperty("id",id);
+        task.addProperty("status",status.toString());
+        task.addProperty("description",description);
+        task.addProperty("durationMinutes",durationMinutes);
+        return task;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {

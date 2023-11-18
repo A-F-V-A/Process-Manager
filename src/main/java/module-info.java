@@ -7,6 +7,7 @@ module edu.est.library {
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml;
     requires commons.email;
+    requires com.google.gson;
 
     opens edu.est.process.manager.infrastructure to javafx.fmxl;
     exports edu.est.process.manager.infrastructure;
@@ -16,10 +17,14 @@ module edu.est.library {
 
     opens edu.est.process.manager.infrastructure.javafx.components to javafx.fmxl;
     exports edu.est.process.manager.infrastructure.javafx.components;
-/*
-    opens  edu.est.library.domain.models to javafx.fxml;
-    exports edu.est.library.domain.models;
 
-    opens  edu.est.library.domain.dto to javafx.fxml;
-    exports edu.est.library.domain.dto;*/
+    opens  edu.est.process.manager.domain.models to javafx.fmxl;
+    exports edu.est.process.manager.domain.models;
+
+    opens  edu.est.process.manager.domain.util to javafx.fmxl;
+    exports edu.est.process.manager.domain.util;
+
+    opens  edu.est.process.manager.domain.structures to javafx.fmxl;
+    exports edu.est.process.manager.domain.structures;
+
 }

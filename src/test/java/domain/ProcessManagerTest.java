@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProcessManagerTest {
-
     @Test
     void getInstance_ShouldAlwaysReturnSameInstance() {
         ProcessManager manager1 = ProcessManager.getInstance();
