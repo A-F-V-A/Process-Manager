@@ -3,6 +3,7 @@ module edu.est.library {
     requires javafx.fxml;
     requires java.desktop;
     requires java.sql;
+    requires jakarta.mail;
 
     opens edu.est.process.manager.infrastructure to javafx.fmxl;
     exports edu.est.process.manager.infrastructure;
