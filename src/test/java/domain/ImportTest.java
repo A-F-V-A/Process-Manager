@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ImportTest {
 
-    private final String testCSVFilePath = "C:\\Users\\MI PC\\Desktop.csv"; // Ruta del archivo CSV de prueba
+    private final String testCSVFilePath = "C:\\Users\\MI PC\\Documents\\IngenieriaDeSistemas\\Semestre5\\EstructuraDatos\\Process-Manager.CSV"; // Ruta del archivo CSV de prueba
     private final String testExcelFilePath = "C:\\Users\\MI PC\\Downloads\\BORRADOR NOTAS SI 01N 2023-02.xlsx"; // Ruta del archivo Excel de prueba
 
     @Test

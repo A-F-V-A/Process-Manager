@@ -7,9 +7,17 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase que gestiona la importación de datos desde archivos CSV y Excel (XLSX).
+ */
 public class Import {
 
-    // Importar desde un archivo CSV
+    /**
+     * Importa datos desde un archivo CSV.
+     *
+     * @param filePath Ruta del archivo CSV del que se importarán los datos.
+     * @return Lista de matrices de cadenas que representan los datos importados.
+     */
     public List<String[]> importFromCSV(String filePath) {
         List<String[]> data = new ArrayList<>();
 
@@ -26,7 +34,12 @@ public class Import {
         return data;
     }
 
-    // Importar desde un archivo Excel (XLSX)
+    /**
+     * Importa datos desde un archivo Excel (XLSX).
+     *
+     * @param filePath Ruta del archivo Excel del que se importarán los datos.
+     * @return Lista de matrices de cadenas que representan los datos importados.
+     */
     public List<String[]> importFromExcel(String filePath) {
         List<String[]> data = new ArrayList<>();
 
@@ -44,9 +57,8 @@ public class Import {
                         case NUMERIC:
                             rowData.add(String.valueOf(cell.getNumericCellValue()));
                             break;
-                        // Agregar más casos según los tipos de celda que esperes
                         default:
-                            rowData.add(""); // Otra opción, dependiendo del caso
+                            rowData.add("");
                             break;
                     }
                 }

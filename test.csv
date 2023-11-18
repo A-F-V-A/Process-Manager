@@ -1,0 +1,15 @@
+Activity ID,Activity Name
+c409951a-aa5a-44c6-aac2-c74e3cc61f0c,Activity 1
+
+Task Description,Status,Duration (minutes)
+Task 1 for Activity 1,Pending,60
+Task 2 for Activity 1,Pending,45
+
+Activity ID,Activity Name
+ba50f87f-09ee-4d88-8173-ecc870569cee,Activity 2
+
+Task Description,Status,Duration (minutes)
+Task 1 for Activity 2,Pending,30
+Task 2 for Activity 2,Pending,40
+Task 3 for Activity 2,Pending,55
+

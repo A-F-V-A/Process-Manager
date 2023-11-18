@@ -6,6 +6,7 @@ module edu.est.library {
     requires jakarta.mail;
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml;
+    requires commons.email;
 
     opens edu.est.process.manager.infrastructure to javafx.fmxl;
     exports edu.est.process.manager.infrastructure;

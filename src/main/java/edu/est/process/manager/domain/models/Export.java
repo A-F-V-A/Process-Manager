@@ -6,10 +6,19 @@ import java.io.IOException;
 import java.util.List;
 import org.apache.poi.ss.usermodel.*;
 
+/**
+ * Clase que gestiona la exportación de datos a archivos CSV y Excel.
+ */
 public class Export {
 
-    // Método para exportar datos a un archivo CSV
-    public void exportToCSV(List<String[]> data, String filePath) {
+    /**
+     * Exporta los datos a un archivo CSV en la ruta especificada.
+     *
+     * @param data     Datos a exportar en forma de lista de matrices de cadenas.
+     * @param filePath Ruta del archivo CSV de destino.
+     * @throws IOException Si ocurre un error al escribir en el archivo CSV.
+     */
+    public void exportToCSV(List<String[]> data, String filePath) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
             for (String[] row : data) {
                 for (int i = 0; i < row.length; i++) {
@@ -20,12 +29,21 @@ public class Export {
                 }
                 writer.append("\n");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
-    public void exportToExcel(List<String[]> data, String filePath) {
-        try (Workbook workbook = WorkbookFactory.create(true)) {
+
+    /**
+     * Exporta los datos a un archivo Excel en la ruta especificada.
+     *
+     * @param data     Datos a exportar en forma de lista de matrices de cadenas.
+     * @param filePath Ruta del archivo Excel de destino.
+     * @throws IOException Si ocurre un error al escribir en el archivo Excel.
+     */
+    public void exportToExcel(List<String[]> data, String filePath) throws IOException {
+        Workbook workbook = null;
+        FileOutputStream fileOut = null;
+        try {
+            workbook = WorkbookFactory.create(true);
             Sheet sheet = workbook.createSheet("Datos");
 
             // Escribir los datos en la hoja de cálculo
@@ -39,13 +57,56 @@ public class Export {
                 }
             }
 
-            // Guardar el archivo Excel
-            try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-                workbook.write(fileOut);
-            }
+            // Guardar el archivo Excel si no existe previamente
+            fileOut = new FileOutputStream(filePath);
+            workbook.write(fileOut);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } finally {
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    // Manejar el cierre del workbook
+                    e.printStackTrace();
+                }
+            }
+            if (fileOut != null) {
+                try {
+                    fileOut.close();
+                } catch (IOException e) {
+                    // Manejar el cierre del FileOutputStream
+                    e.printStackTrace();
+                }
+            }
         }
+    }
+
+    /**
+     * Exporta los datos a un archivo especificado según el tipo de archivo deseado (CSV o Excel).
+     *
+     * @param data     Datos a exportar en forma de lista de matrices de cadenas.
+     * @param filePath Ruta del archivo de destino.
+     * @param fileType Tipo de archivo deseado (CSV o Excel).
+     * @throws IOException Si ocurre un error al escribir en el archivo.
+     */
+    public void exportData(List<String[]> data, String filePath, FileType fileType) throws IOException {
+        switch (fileType) {
+            case CSV:
+                exportToCSV(data, filePath);
+                break;
+            case EXCEL:
+                exportToExcel(data, filePath);
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de archivo no compatible");
+        }
+    }
+
+    /**
+     * Enumeración que define los tipos de archivo soportados para la exportación.
+     */
+    public enum FileType {
+        CSV,
+        EXCEL
     }
 }
