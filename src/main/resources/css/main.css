@@ -59,7 +59,7 @@
 }
 
 .card-button {
-    -fx-background-color: #FF4081;
+    -fx-background-color: #FF5733;
     -fx-text-fill: #FFFFFF;
     -fx-background-radius: 5px;
     -fx-border-radius: 5px;
@@ -78,7 +78,7 @@
 }
 
 .close-button:hover {
-    -fx-text-fill: #FF4081;
+    -fx-text-fill: #fc5d3b;
     -fx-cursor: hand;
 }
 
@@ -91,4 +91,24 @@
     -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
+
+.floating-button {
+    -fx-background-radius: 30;
+    -fx-min-width: 60px;
+    -fx-min-height: 60px;
+    -fx-background-color: rgba(255, 255, 255, 0.3); /* Transparente con un toque de blanco */
+    -fx-font-size: 24px;
+    -fx-text-fill: #b6b6b6; /* Color del texto */
+    -fx-effect: dropshadow(gaussian, rgba(59, 59, 59, 0.5), 10, 0, 0, 5);
+    -fx-border-color: #b6b6b6;
+    -fx-border-width: 1;
+    -fx-border-radius: 30;
+}
+
+.floating-button:hover {
+    -fx-background-color: #FF5733; /* Cambia al color deseado al hacer hover */
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
 

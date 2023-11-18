@@ -63,6 +63,8 @@ public class ProcessManager {
         return processes.remove(id);
     }
 
+    
+
     public void saveData(){
         JsonObject fileSave = new JsonObject();
         JsonArray processArray = new JsonArray();
@@ -70,7 +72,6 @@ public class ProcessManager {
         fileSave.add("process",processArray);
         JsonFileUtil.saveJsonObjectToFile(fileSave,"processManager.json");
     }
-
     public void loadData(){
         JsonObject data = JsonFileUtil.readJsonFromFile("processManager.json");
         JsonArray processArray = data.getAsJsonArray("process");
