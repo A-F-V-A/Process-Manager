@@ -84,7 +84,6 @@ public class ProcessManager {
             addProcess(process);
         }
     }
-    // Logica de persistencia
     private CustomProcess createProcess(JsonObject process) {
         CustomProcess loadProcess = new CustomProcess();
 

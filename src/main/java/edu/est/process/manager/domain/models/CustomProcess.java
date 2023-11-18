@@ -13,7 +13,7 @@ public class CustomProcess {
     private String name;
     private String description;
     private CustomDoublyLinkedList<Activity> activities;
-    private int totalDurationMinutes;
+    private int totalDurationMinutes = 0;
 
     public CustomProcess(){
         this.activities = new CustomDoublyLinkedList<>();
@@ -28,7 +28,6 @@ public class CustomProcess {
         this.id = IDGenerator.generateID();
         this.name = name;
         this.activities = new CustomDoublyLinkedList<>();
-        this.totalDurationMinutes = 0;
     }
 
     public String getId() {

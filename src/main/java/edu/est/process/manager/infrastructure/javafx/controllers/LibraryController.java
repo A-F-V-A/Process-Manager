@@ -1,5 +1,6 @@
 package edu.est.process.manager.infrastructure.javafx.controllers;
 
+import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
 import edu.est.process.manager.infrastructure.javafx.components.CModal;
 import edu.est.process.manager.infrastructure.javafx.components.CProcess;
@@ -35,25 +36,15 @@ public class LibraryController implements Initializable {
     private void ViewProcess(){
 
         VBox container = new VBox(10);
-        for (int i = 0; i < 10; i++) {
-            CProcess process = new CProcess(
-                    "Task " + i,
-                    "ID " + i,
-                    "Descripción " + i,
-                    120 + i,
-                    manager);
-            VBox card = process.render();
-            container.getChildren().add(card);
+        for (CustomProcess process : manager.getProcesses().values()){
+            CProcess renderProcess = new CProcess(process,manager);
+            container.getChildren().add(renderProcess.render());
         }
 
-        ScrollPane scrollPane = new ScrollPane(container);
-        scrollPane.setFitToWidth(true);
-
-        // Crear botón flotante
         Button floatingButton = new Button("+");
         floatingButton.getStyleClass().add("floating-button");
         floatingButton.setOnAction(event -> {
-            CModal createProcess = new CModal(manager);
+            CModal createProcess = new CModal(manager,container);
             VBox modal = createProcess.render();
             modal.setId("modal-process");
 
@@ -64,6 +55,9 @@ public class LibraryController implements Initializable {
             modal.setLayoutX(xPosition);
         });
 
+
+        ScrollPane scrollPane = new ScrollPane(container);
+        scrollPane.setFitToWidth(true);
         p_container.getChildren().add(scrollPane);
         p_container.getChildren().add(floatingButton);
 

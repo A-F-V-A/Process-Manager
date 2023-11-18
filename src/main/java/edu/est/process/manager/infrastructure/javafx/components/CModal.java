@@ -1,5 +1,6 @@
 package edu.est.process.manager.infrastructure.javafx.components;
 
+import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -13,8 +14,10 @@ import javafx.scene.text.Text;
 public class CModal {
 
     private final ProcessManager manager;
-    public CModal(ProcessManager manager){
+    private final VBox container;
+    public CModal(ProcessManager manager, VBox container){
         this.manager = manager;
+        this.container = container;
     }
     public VBox render() {
         // Crear el contenedor principal del modal
@@ -45,7 +48,7 @@ public class CModal {
         // Botón de acción para crear
         Button createButton = new Button("Crear");
         createButton.getStyleClass().add("button-modal");
-        createButton.setOnAction(event -> handleCreateAction(nameField.getText(), descriptionArea.getText()));
+        createButton.setOnAction(event -> handleCreateAction(nameField.getText(), descriptionArea.getText(),modal));
 
         // Organización de componentes
         StackPane topPane = new StackPane(closeButton);
@@ -63,8 +66,16 @@ public class CModal {
         }
     }
 
-    private void handleCreateAction(String name, String description) {
-        // Aquí puedes implementar la lógica para manejar la creación de un nuevo proceso
-        System.out.println("Crear proceso: " + name + " - " + description);
+    private void handleCreateAction(String name, String description,VBox modal) {
+        String nameProcess = name.replaceAll("\\s+", " ");
+        String descriptionProcess = description.replaceAll("\\s+", " ");
+        if(nameProcess.trim().isEmpty()) return;
+        if(descriptionProcess.trim().isEmpty()) return;
+        CustomProcess newProcess = new CustomProcess(nameProcess,description);
+        manager.addProcess(newProcess);
+        CProcess renderProcess = new CProcess(newProcess,manager);
+        container.getChildren().add(renderProcess.render());
+        handleCloseAction(modal);
+        manager.saveData();
     }
 }
