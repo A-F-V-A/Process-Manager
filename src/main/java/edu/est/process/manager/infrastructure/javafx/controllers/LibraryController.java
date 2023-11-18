@@ -1,18 +1,18 @@
 package edu.est.process.manager.infrastructure.javafx.controllers;
 
+
+import edu.est.process.manager.infrastructure.javafx.components.CNotification;
 import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
 import edu.est.process.manager.infrastructure.javafx.components.CModal;
 import edu.est.process.manager.infrastructure.javafx.components.CProcess;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -27,9 +27,11 @@ public class LibraryController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        manager = ProcessManager.getInstance();
-        manager.loadData();
-        ViewProcess();
+//        Process();
+        Notification();
+//        manager = ProcessManager.getInstance();
+//        manager.loadData();
+//        ViewProcess();
     }
 
 
@@ -70,6 +72,26 @@ public class LibraryController implements Initializable {
         AnchorPane.setRightAnchor(floatingButton, 20.0);
     }
 
+    private void Notification() {
+        VBox container = new VBox(10);
+        CNotification process = new CNotification();
+        VBox card = process.render();
+        container.getChildren().add(card);
+
+
+        ScrollPane scrollPane = new ScrollPane(container);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+
+        VBox centeringnContainer = new VBox(scrollPane);
+        centeringnContainer.setAlignment(Pos.CENTER);
+
+        p_container.getChildren().add(scrollPane);
+        AnchorPane.setTopAnchor(scrollPane, 5.0);
+        AnchorPane.setRightAnchor(scrollPane, 5.0);
+        AnchorPane.setBottomAnchor(scrollPane, 5.0);
+        AnchorPane.setLeftAnchor(scrollPane, 5.0);
+    }
     private boolean nodeExists(String id) {
         for (Node child : p_container.getChildren()) {
             if (id.equals(child.getId())) {
@@ -78,5 +100,4 @@ public class LibraryController implements Initializable {
         }
         return false; // the node not exist
     }
-
 }

@@ -3,6 +3,10 @@ module edu.est.library {
     requires javafx.fxml;
     requires java.desktop;
     requires java.sql;
+    requires jakarta.mail;
+    requires org.apache.poi.poi;
+    requires org.apache.poi.ooxml;
+    requires commons.email;
     requires com.google.gson;
 
     opens edu.est.process.manager.infrastructure to javafx.fmxl;
