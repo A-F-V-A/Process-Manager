@@ -9,6 +9,9 @@ module edu.est.library {
 
     opens edu.est.process.manager.infrastructure.javafx.controllers to javafx.fmxl;
     exports edu.est.process.manager.infrastructure.javafx.controllers;
+
+    opens edu.est.process.manager.infrastructure.javafx.components to javafx.fmxl;
+    exports edu.est.process.manager.infrastructure.javafx.components;
 /*
     opens  edu.est.library.domain.models to javafx.fxml;
     exports edu.est.library.domain.models;
