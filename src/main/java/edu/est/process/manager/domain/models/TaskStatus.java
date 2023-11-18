@@ -1,5 +1,7 @@
 package edu.est.process.manager.domain.models;
 
+import java.io.Serializable;
+
 /**
  * Enumeration for task status options.
  */
