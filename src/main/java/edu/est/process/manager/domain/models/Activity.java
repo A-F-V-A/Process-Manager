@@ -14,7 +14,10 @@ public class Activity  {
     private CustomQueue<Task> pendingTasks;
     private CustomQueue<Task> completedTasks;
 
-    public Activity() {}
+    public Activity() {
+        this.pendingTasks = new CustomQueue<>();
+        this.completedTasks = new CustomQueue<>();
+    }
     public Activity(String name, String description) {
         this(name);
         this.description = description;

@@ -123,8 +123,8 @@ public class ProcessManager {
         Task newTask = new Task();
 
         newTask.setId(task.get("id").getAsString());
-        newTask.setDurationMinutes(Integer.valueOf(task.get("name").getAsString()));
-        newTask.setStatus(TaskStatus.valueOf(task.get("status").getAsString()));
+        newTask.setDurationMinutes(Integer.valueOf(task.get("durationMinutes").getAsString()));
+        newTask.setStatus(TaskStatus.valueOf(task.get("status").getAsString().toUpperCase()));
         newTask.setDescription(task.get("description").getAsString());
 
         return newTask;

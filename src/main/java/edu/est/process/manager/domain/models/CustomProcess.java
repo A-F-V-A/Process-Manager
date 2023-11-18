@@ -15,7 +15,9 @@ public class CustomProcess {
     private CustomDoublyLinkedList<Activity> activities;
     private int totalDurationMinutes;
 
-    public CustomProcess(){}
+    public CustomProcess(){
+        this.activities = new CustomDoublyLinkedList<>();
+    }
 
     public CustomProcess(String name,String description) {
         this(name);

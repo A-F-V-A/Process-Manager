@@ -11,8 +11,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ApplicationTest {
@@ -55,8 +55,10 @@ public class ApplicationTest {
         }
 
     }
-    @AfterEach
-    void tearDown() {
+    @Test
+    void loadData(){
+        ProcessManager manager = ProcessManager.getInstance();
+        assertDoesNotThrow(manager::loadData, "loadData no debería lanzar una excepción.");
         // Limpiar después de la prueba
         File file = new File("processManager.json");
         if (file.exists()) {
@@ -64,3 +66,4 @@ public class ApplicationTest {
         }
     }
 }
+
