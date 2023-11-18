@@ -89,4 +89,20 @@ public class Notification {
     public synchronized void removeCompletedTask(Task completedTask) {
         tasks.remove(completedTask);
     }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

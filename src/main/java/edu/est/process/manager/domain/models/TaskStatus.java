@@ -9,7 +9,8 @@ public enum TaskStatus {
     MANDATORY("Mandatory"),
     OPTIONAL("Optional"),
     DELAYED("Delayed"),
-    COMPLETED("Completed");
+    COMPLETED("Completed"),
+    PENDING("Pending");
 
 
     private final String status;
