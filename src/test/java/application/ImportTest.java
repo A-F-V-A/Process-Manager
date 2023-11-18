@@ -1,6 +1,6 @@
-package domain;
+package application;
 
-import edu.est.process.manager.domain.models.Import;
+import edu.est.process.manager.domain.util.Import;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ImportTest {
 
     private final String testCSVFilePath = "C:\\Users\\MI PC\\Documents\\IngenieriaDeSistemas\\Semestre5\\EstructuraDatos\\Process-Manager.CSV"; // Ruta del archivo CSV de prueba
-    private final String testExcelFilePath = "C:\\Users\\MI PC\\Downloads\\BORRADOR NOTAS SI 01N 2023-02.xlsx"; // Ruta del archivo Excel de prueba
+    private final String testExcelFilePath = ":\\Users\\MI PC\\Documents\\IngenieriaDeSistemas\\Semestre5\\EstructuraDatos\\Process-Manager.xlsx"; // Ruta del archivo Excel de prueba
 
     @Test
     public void testImportFromCSV() {

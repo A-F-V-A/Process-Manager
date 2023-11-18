@@ -1,4 +1,4 @@
-package domain;
+package application;
 
 import edu.est.process.manager.domain.models.Notification;
 import edu.est.process.manager.domain.models.Task;

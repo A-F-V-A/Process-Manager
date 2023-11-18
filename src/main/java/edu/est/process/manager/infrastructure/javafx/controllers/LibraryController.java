@@ -27,9 +27,9 @@ public class LibraryController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //        Process();
         Notification();
-        manager = ProcessManager.getInstance();
-        manager.loadData();
-        ViewProcess();
+//        manager = ProcessManager.getInstance();
+//        manager.loadData();
+//        ViewProcess();
     }
 
 

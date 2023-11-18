@@ -1,4 +1,4 @@
-package edu.est.process.manager.domain.models;
+package edu.est.process.manager.domain.util;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -18,7 +18,7 @@ public class Import {
      * @param filePath Ruta del archivo CSV del que se importarán los datos.
      * @return Lista de matrices de cadenas que representan los datos importados.
      */
-    public List<String[]> importFromCSV(String filePath) {
+    public static List<String[]> importFromCSV(String filePath) {
         List<String[]> data = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -40,7 +40,7 @@ public class Import {
      * @param filePath Ruta del archivo Excel del que se importarán los datos.
      * @return Lista de matrices de cadenas que representan los datos importados.
      */
-    public List<String[]> importFromExcel(String filePath) {
+    public static List<String[]> importFromExcel(String filePath) {
         List<String[]> data = new ArrayList<>();
 
         try (FileInputStream file = new FileInputStream(new File(filePath));

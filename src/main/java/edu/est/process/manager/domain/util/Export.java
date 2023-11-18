@@ -1,4 +1,4 @@
-package edu.est.process.manager.domain.models;
+package edu.est.process.manager.domain.util;
 
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -18,7 +18,7 @@ public class Export {
      * @param filePath Ruta del archivo CSV de destino.
      * @throws IOException Si ocurre un error al escribir en el archivo CSV.
      */
-    public void exportToCSV(List<String[]> data, String filePath) throws IOException {
+    public static void exportToCSV(List<String[]> data, String filePath) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
             for (String[] row : data) {
                 for (int i = 0; i < row.length; i++) {
@@ -39,7 +39,7 @@ public class Export {
      * @param filePath Ruta del archivo Excel de destino.
      * @throws IOException Si ocurre un error al escribir en el archivo Excel.
      */
-    public void exportToExcel(List<String[]> data, String filePath) throws IOException {
+    public static void exportToExcel(List<String[]> data, String filePath) throws IOException {
         Workbook workbook = null;
         FileOutputStream fileOut = null;
         try {

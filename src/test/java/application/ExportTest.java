@@ -1,11 +1,11 @@
-package domain;
+package application;
 
 import edu.est.process.manager.domain.models.Activity;
-import edu.est.process.manager.domain.models.Export;
+import edu.est.process.manager.domain.util.Export;
 import edu.est.process.manager.domain.models.Task;
 import edu.est.process.manager.domain.models.TaskStatus;
 import org.junit.jupiter.api.Test;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
