@@ -111,4 +111,49 @@
     -fx-cursor: hand;
 }
 
+.text-modal, .area-modal {
+    -fx-padding: 10px;
+    -fx-border-color: #bfbfbf;
+    -fx-border-radius: 5px;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+.text-modal:focused, .area-modal:focused {
+    -fx-border-color: #FF5733; /* Color de enfoque */
+}
+
+.text-modal .scroll-pane .viewport, .area-modal .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.text-modal .scroll-pane .content, .area-modal .scroll-pane .content {
+    -fx-padding: 0;
+}
+
+.area-modal {
+    -fx-wrap-text: true;
+}
+
+.button-modal {
+    -fx-background-color: #FF5733; /* Color de fondo */
+    -fx-text-fill: white; /* Color del texto */
+    -fx-font-weight: bold; /* Peso de la fuente */
+    -fx-padding: 10px 20px; /* Espaciado interno */
+    -fx-border-radius: 5px; /* Radio del borde */
+    -fx-background-radius: 5px; /* Radio del fondo */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0); /* Sombra */
+    -fx-cursor: hand;
+}
+
+.button-modal:hover {
+    -fx-background-color: #f35635; /* Color de fondo al pasar el mouse */
+}
+
+.button-modal:pressed {
+    -fx-background-color: #ff4a1f; /* Color de fondo al hacer clic */
+}
+
+
 

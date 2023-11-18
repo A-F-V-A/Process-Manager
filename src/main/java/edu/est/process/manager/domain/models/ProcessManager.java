@@ -63,7 +63,9 @@ public class ProcessManager {
         return processes.remove(id);
     }
 
-    
+    public Map<String, CustomProcess> getProcesses() {
+        return processes;
+    }
 
     public void saveData(){
         JsonObject fileSave = new JsonObject();
@@ -74,6 +76,7 @@ public class ProcessManager {
     }
     public void loadData(){
         JsonObject data = JsonFileUtil.readJsonFromFile("processManager.json");
+        if(data == null) return;
         JsonArray processArray = data.getAsJsonArray("process");
         for (int i = 0; i < processArray.size();i++){
             CustomProcess process = createProcess(processArray.get(i).getAsJsonObject());

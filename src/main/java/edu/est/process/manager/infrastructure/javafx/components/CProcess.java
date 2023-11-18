@@ -1,5 +1,7 @@
 package edu.est.process.manager.infrastructure.javafx.components;
 
+import edu.est.process.manager.domain.models.CustomProcess;
+import edu.est.process.manager.domain.models.ProcessManager;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -13,11 +15,14 @@ public class CProcess {
     public String id;
     public String description;
     public int time;
-    public CProcess(String title, String id, String description, int time){
+
+    public ProcessManager manager;
+    public CProcess(String title, String id, String description, int time, ProcessManager manager){
         this.title  = title;
         this.id = id;
         this.description = description;
         this.time = time;
+        this.manager = manager;
     }
     // Método para renderizar la tarjeta
     public VBox render(){
