@@ -7,7 +7,9 @@ package edu.est.process.manager.domain.models;
 public class Task {
     private String description;
     private TaskStatus status;
+    private long starTime;
     private int durationMinutes;
+    private boolean notification;
 
     /**
      * Constructor for creating a new Task instance.
@@ -20,6 +22,8 @@ public class Task {
         this.description = description;
         this.status = status;
         this.durationMinutes = durationMinutes;
+        this.starTime = System.currentTimeMillis();
+        this.notification = false;
     }
 
 
@@ -40,18 +44,38 @@ public class Task {
     }
 
     public int getDurationMinutes() {
-        return durationMinutes;
+        long elapsedTime = System.currentTimeMillis() - starTime;
+        int remainingTime = (int) ((durationMinutes * 60 * 1000 - elapsedTime) / (60 * 1000));
+        return remainingTime;
     }
 
     public void setDurationMinutes(int durationMinutes) {
         this.durationMinutes = durationMinutes;
     }
 
+    public boolean isNotification() {
+        return notification;
+    }
+
+    public void setNotification(boolean notification) {
+        this.notification = notification;
+    }
+
+    public long getStarTime() {
+        return starTime;
+    }
+
+    public void setStarTime(long starTime) {
+        this.starTime = starTime;
+    }
+
     /**
      * Marks the task as completed.
      */
     public void completeTask() {
+        Notification notification = new Notification();
         setStatus(TaskStatus.COMPLETED);
+        notification.removeCompletedTask(this);
     }
 
 
@@ -61,6 +85,7 @@ public class Task {
                 "description='" + description + '\'' +
                 ", status=" + status +
                 ", durationMinutes=" + durationMinutes +
+                ", notification= " + notification +
                 '}';
     }
 }
