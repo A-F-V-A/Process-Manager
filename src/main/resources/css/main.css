@@ -86,6 +86,19 @@
     -fx-cursor: hand;
 }
 
+.arrow{
+    -fx-background-color: transparent;
+    -fx-text-fill: #fc5d3b;
+}
+
+.arrow:hover {
+    -fx-cursor: hand;
+    -fx-background-color: #fc5d3b;
+    -fx-text-fill: white;
+}
+
+
+
 .time-label {
     -fx-font-size: 12px;
     -fx-font-weight: normal;
@@ -194,11 +207,11 @@
     -fx-background-color: #f66b4e; /* Color de fondo al pasar el mouse */
 }
 
-.notification-card .check-box {
+.check-box {
     -fx-font-size: 14px;
 }
 
-.notification-card .check-box .box {
+.check-box .box {
     -fx-background-color: white;
     -fx-border-color: #de6951;
     -fx-border-width: 1;

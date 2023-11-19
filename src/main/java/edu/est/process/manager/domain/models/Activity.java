@@ -6,6 +6,7 @@ import edu.est.process.manager.domain.util.IDGenerator;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import java.util.List;
+import java.util.Objects;
 
 public class Activity  {
     private String id;
@@ -131,6 +132,29 @@ public class Activity  {
 
     public void setCompletedTasks(CustomQueue<Task> completedTasks) {
         this.completedTasks = completedTasks;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Activity activity = (Activity) o;
+        return Objects.equals(getId(), activity.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
 

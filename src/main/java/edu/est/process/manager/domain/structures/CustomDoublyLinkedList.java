@@ -170,13 +170,6 @@ public class CustomDoublyLinkedList<E> {
         return node.element;
     }
 
-    /**
-     * Converts a standard List to a CustomDoublyLinkedList.
-     *
-     * @param list The standard List to convert.
-     * @param <E>  The type of elements in the List.
-     * @return A CustomDoublyLinkedList containing the elements of the List.
-     */
     public static <E> CustomDoublyLinkedList<E> fromList(List<E> list) {
         CustomDoublyLinkedList<E> customList = new CustomDoublyLinkedList<>();
         for (E element : list) {
@@ -184,5 +177,102 @@ public class CustomDoublyLinkedList<E> {
         }
         return customList;
     }
+
+    private Node<E> findNode(E element) {
+        Node<E> current = head.next;
+        while (current != tail) {
+            if (current.element.equals(element)) {
+                return current;
+            }
+            current = current.next;
+        }
+        return null; // Retorna null si el elemento no se encuentra en la lista
+    }
+
+    public void swapElements(E elementA, E elementB) {
+        Node<E> nodeA = findNode(elementA);
+        Node<E> nodeB = findNode(elementB);
+
+        if (nodeA != null && nodeB != null) {
+            // Intercambiar los elementos de los nodos
+            E temp = nodeA.element;
+            nodeA.element = nodeB.element;
+            nodeB.element = temp;
+        }
+    }
+
+    public void moveNodeForward(E element) {
+        if (head.next == tail || head.next.next == tail) {
+            // La lista está vacía o solo tiene un elemento.
+            return;
+        }
+
+        Node<E> current = head.next;
+        while (current != tail) {
+            if (current.element.equals(element)) {
+                Node<E> next = current.next;
+                if (next == tail) {
+                    // Si 'current' es el último nodo real, no se puede mover más adelante.
+                    return;
+                }
+
+                // Intercambiar 'current' y 'next'
+                swapNodes(current, next);
+                return;
+            }
+            current = current.next;
+        }
+    }
+
+    public void moveNodeBackward(E element) {
+        if (head.next == tail || head.next.next == tail) {
+            // La lista está vacía o solo tiene un elemento.
+            return;
+        }
+
+        Node<E> current = tail.prev;
+        while (current != head) {
+            if (current.element.equals(element)) {
+                Node<E> previous = current.prev;
+                if (previous == head) {
+                    // Si 'current' es el primer nodo real, no se puede mover más atrás.
+                    return;
+                }
+
+                // Intercambiar 'current' y 'previous'
+                swapNodes(previous, current);
+                return;
+            }
+            current = current.prev;
+        }
+    }
+
+    private void swapNodes(Node<E> nodeA, Node<E> nodeB) {
+        // Asumiendo que nodeA y nodeB son adyacentes y nodeA está antes de nodeB
+        Node<E> aPrev = nodeA.prev;
+        Node<E> bNext = nodeB.next;
+
+        if (aPrev != null) {
+            aPrev.next = nodeB;
+        }
+        nodeB.prev = aPrev;
+
+        nodeB.next = nodeA;
+        nodeA.prev = nodeB;
+
+        nodeA.next = bNext;
+        if (bNext != null) {
+            bNext.prev = nodeA;
+        }
+
+        // Actualiza head y tail si es necesario
+        if (head.next == nodeA) {
+            head.next = nodeB;
+        }
+        if (tail.prev == nodeB) {
+            tail.prev = nodeA;
+        }
+    }
+
 
 }
