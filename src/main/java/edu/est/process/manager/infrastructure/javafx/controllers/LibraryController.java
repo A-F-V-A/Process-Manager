@@ -1,6 +1,7 @@
 package edu.est.process.manager.infrastructure.javafx.controllers;
 
 
+import edu.est.process.manager.infrastructure.javafx.components.CExportImport;
 import edu.est.process.manager.infrastructure.javafx.components.CNotification;
 import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
@@ -64,6 +65,8 @@ public class LibraryController implements Initializable {
     public void handleViewImportExportClick(ActionEvent event) {
         Node source = (Node) event.getSource();
         navActive(source.getId());
+        clear();
+        ExportImport();
     }
 
 
@@ -114,6 +117,19 @@ public class LibraryController implements Initializable {
         component.setLayoutX(xPosition);
         component.setLayoutY(yPosition);
     }
+
+    public void ExportImport() {
+        VBox container = new VBox(10);
+        CExportImport exportImport = new CExportImport();
+        VBox component = exportImport.render();
+        p_container.getChildren().add(component);
+
+        double xPosition = (p_container.getWidth() - 300.0) / 2;
+        double yPosition = (p_container.getHeight() - 300.0) / 2;
+        component.setLayoutX(xPosition);
+        component.setLayoutY(yPosition);
+    }
+
     private boolean nodeExists(String id) {
         for (Node child : p_container.getChildren()) {
             if (id.equals(child.getId())) {

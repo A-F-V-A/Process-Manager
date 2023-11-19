@@ -1,5 +1,6 @@
 package edu.est.process.manager.domain.util;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -117,5 +118,81 @@ public class Export {
             completedTasksInfo.add(completedTaskInfo);
         }
         return completedTasksInfo;
+    }
+
+    public List<String[]> importFromExcel(String filePath) throws IOException {
+
+        if (!validateExcelFile(filePath)) {
+            System.err.println("El archivo no cumple con los criterios, puedes revisar si cuenta con todas las columnas");
+            return new ArrayList<>(); // O puedes lanzar una excepción, dependiendo de la lógica de tu aplicación
+        }
+        List<String[]> importedData = new ArrayList<>();
+
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+             Workbook workbook = new XSSFWorkbook(fileInputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0); // Obtener la primera hoja
+
+            // Iterar sobre las filas y columnas del archivo Excel
+            for (Row row : sheet) {
+                List<String> rowData = new ArrayList<>();
+                for (Cell cell : row) {
+                    switch (cell.getCellType()) {
+                        case STRING:
+                            rowData.add(cell.getStringCellValue());
+                            break;
+                        case NUMERIC:
+                            if (DateUtil.isCellDateFormatted(cell)) {
+                                rowData.add(cell.getDateCellValue().toString());
+                            } else {
+                                rowData.add(String.valueOf(cell.getNumericCellValue()));
+                            }
+                            break;
+                        case BOOLEAN:
+                            rowData.add(String.valueOf(cell.getBooleanCellValue()));
+                            break;
+                        default:
+                            rowData.add(""); // Agregar un valor vacío para otro tipo de celda
+                    }
+                }
+                importedData.add(rowData.toArray(new String[0]));
+            }
+        }
+
+        return importedData;
+    }
+
+    public boolean validateExcelFile(String filePath) {
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+             Workbook workbook = new XSSFWorkbook(fileInputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0); // Obtener la primera hoja
+
+            Row headerRow = sheet.getRow(0);
+            if (headerRow == null) {
+                return false; // No hay fila de encabezado
+            }
+
+            String[] expectedHeaders = {
+                    "nombre proceso", "idProceso", "DescripcionProceso", "duracionProceso",
+                    "idActividades", "nombre actividad", "actividad", "nombreDescripcion",
+                    "idTarea", "descripcion", "estado", "duracion"
+            };
+
+            // Verificar que todas las columnas esperadas estén presentes en el archivo
+            for (int i = 0; i < expectedHeaders.length; i++) {
+                Cell cell = headerRow.getCell(i);
+                if (cell == null || !cell.getStringCellValue().trim().equalsIgnoreCase(expectedHeaders[i])) {
+                    return false; // Columna faltante o nombre incorrecto
+                }
+            }
+
+            // Verificar si hay datos en el archivo (al menos una fila de datos)
+            return sheet.getLastRowNum() >= 1;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false; // Error al leer el archivo
+        }
     }
 }

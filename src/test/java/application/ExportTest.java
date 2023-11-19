@@ -38,4 +38,39 @@ public class ExportTest {
             assertEquals(expectedColumns, rowData.length);
         }
     }
+
+    @Test
+    public void testImportFromExcelValidFile() {
+        String validFilePath = "C:\\Users\\MI PC\\Documents\\IngenieriaDeSistemas\\Semestre5\\EstructuraDatos\\Process-Manager\\test.xlsx"; 
+
+        Export exporter = new Export();
+        List<String[]> importedData = null;
+        try {
+            importedData = exporter.importFromExcel(validFilePath);
+        } catch (IOException e) {
+            fail("Excepción al importar desde Excel: " + e.getMessage());
+        }
+
+        assertNotNull(importedData);
+        assertFalse(importedData.isEmpty());
+
+        // Puedes realizar más validaciones según la estructura de tus datos esperados
+        // Por ejemplo, verificar si la cantidad de columnas y filas coinciden con lo esperado.
+    }
+
+    @Test
+    public void testImportFromExcelInvalidFile() {
+        String invalidFilePath = "C:\\Users\\MI PC\\Documents\\IngenieriaDeSistemas\\Semestre5\\EstructuraDatos\\Process-Manager\\test.xlsx";
+
+        Export exporter = new Export();
+        List<String[]> importedData = null;
+        try {
+            importedData = exporter.importFromExcel(invalidFilePath);
+        } catch (IOException e) {
+            fail("Excepción al importar desde Excel: " + e.getMessage());
+        }
+
+        assertNotNull(importedData);
+        assertTrue(importedData.isEmpty()); // Se espera una lista vacía ya que el archivo es inválido
+    }
 }
