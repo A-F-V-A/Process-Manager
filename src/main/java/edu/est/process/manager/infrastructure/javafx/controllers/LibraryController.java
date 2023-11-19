@@ -73,14 +73,17 @@ public class LibraryController implements Initializable {
         for (CustomProcess process : manager.getProcesses().values()){
             CProcess renderProcess = new CProcess(process,manager);
             container.getChildren().add(renderProcess.render());
+            renderProcess.setContainer(container);
         }
 
         Button floatingButton = new Button("+");
         floatingButton.getStyleClass().add("floating-button");
         floatingButton.setOnAction(event -> {
-            CModal createProcess = new CModal(manager,container);
-            VBox modal = createProcess.render();
+            CModal createProcess = new CModal(manager,container,event);
+            boolean viewActivity =  container.getStyleClass().contains("Activity");
+            VBox modal = createProcess.render(viewActivity);
             modal.setId("modal-process");
+
 
             if(nodeExists("modal-process")) return;
 
@@ -125,8 +128,6 @@ public class LibraryController implements Initializable {
     private void clear(){
         p_container.getChildren().clear();
     }
-
-
     private void navActive(String id){
         String clasName = "nav-active";
         switch (id) {

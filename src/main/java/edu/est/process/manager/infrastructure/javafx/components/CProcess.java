@@ -1,13 +1,18 @@
 package edu.est.process.manager.infrastructure.javafx.components;
 
+import edu.est.process.manager.domain.models.Activity;
 import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
+import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.skin.ScrollPaneSkin;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -19,9 +24,9 @@ public class CProcess {
     public String id;
     public String description;
     public int time;
-
     private final ProcessManager manager;
     private boolean isEditMode = false;
+    private VBox container;
     public CProcess(CustomProcess process, ProcessManager manager){
         this.title  = process.getName();
         this.id = process.getId();
@@ -80,7 +85,6 @@ public class CProcess {
             manager.saveData();
         }
     }
-
     private void handleUpdateAction(VBox card, ActionEvent event) {
         if(!isEditMode){
             for (Node node : card.getChildren()) {
@@ -123,17 +127,42 @@ public class CProcess {
         isEditMode = !isEditMode;
 
     }
-
     private void handleViewAction() {
-        // Acción para el botón "View"
-        System.out.println("View action for " + id);
+        container.setVisible(false);
+        ScrollPane scrollPane = findScrollPaneParent(container);
+
+        if (scrollPane != null) {
+            VBox containerActivity = new VBox(10);
+            containerActivity.setId(id);
+            CustomProcess process = manager.getProcess(id);
+
+            CustomDoublyLinkedList<Activity> activities = process.getActivities();
+
+            activities.forEach(activity ->{
+                CActivity renderActivity = new CActivity(process,activity,manager);
+                containerActivity.getChildren().add(renderActivity.render());
+            },false);
+
+            scrollPane.setContent(containerActivity);
+            scrollPane.setFitToWidth(true);
+        }
+        container.getStyleClass().add("Activity");
+        container.setId(id);
     }
 
-
+    private ScrollPane findScrollPaneParent(Node node) {
+        while (node != null && !(node instanceof ScrollPane)) {
+            node = node.getParent();
+        }
+        return (ScrollPane) node;
+    }
     private String formatTime() {
         int hours = time / 60;
         int minutes = time % 60;
 
         return String.format("%d:%02d", hours, minutes);
+    }
+    public void setContainer(VBox container) {
+        this.container = container;
     }
 }
