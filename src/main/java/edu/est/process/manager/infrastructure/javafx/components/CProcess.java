@@ -4,6 +4,7 @@ import edu.est.process.manager.domain.models.Activity;
 import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
 import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
+import edu.est.process.manager.infrastructure.javafx.util.NodeExplorer;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -18,6 +19,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
+import java.util.List;
 
 public class CProcess {
     public String title;
@@ -148,6 +151,11 @@ public class CProcess {
         }
         container.getStyleClass().add("Activity");
         container.setId(id);
+        System.out.println(id);
+        /*
+        Node root = scrollPane.getParent();
+        List<Node> nodesWithId = NodeExplorer.findNodes(root, node -> "p_container".equals(node.getId()));
+        */
     }
 
     private ScrollPane findScrollPaneParent(Node node) {

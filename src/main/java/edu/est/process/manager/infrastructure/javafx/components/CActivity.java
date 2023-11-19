@@ -83,21 +83,23 @@ public class CActivity {
     }
     private void handleCloseAction(VBox card) {
         if (card.getParent() != null) {
-            //manager.removeProcess(id);
+            CustomDoublyLinkedList<Activity> activities = process.getActivities();
+            activities.removeIf(at -> at.equals(activity));
             ((Pane) card.getParent()).getChildren().remove(card);
-            //manager.saveData();
+            manager.saveData();
         }
     }
     private void moveCardUp(VBox card) {
         VBox parentContainer = (VBox) card.getParent();
         int currentIndex = parentContainer.getChildren().indexOf(card);
         if (currentIndex > 0) {
+            // CustomProcess aux = manager.getProcess(process.getId());
             CustomDoublyLinkedList<Activity> activities = process.getActivities();
-            Activity act = activities.findFirst(at -> at.getId().equals(activity.getId()));
-            activities.moveNodeBackward(act);
-
+            activities.moveNodeBackward(activity);
+            activities.forEach(v -> System.out.println(v.toString()),false);
             parentContainer.getChildren().remove(currentIndex);
             parentContainer.getChildren().add(currentIndex - 1, card);
+
             manager.saveData();
         }
     }
@@ -106,13 +108,14 @@ public class CActivity {
         int currentIndex = parentContainer.getChildren().indexOf(card);
 
         if (currentIndex < parentContainer.getChildren().size() - 1) {
-
+            //CustomProcess aux = manager.getProcess(process.getId());
             CustomDoublyLinkedList<Activity> activities = process.getActivities();
-            Activity act = activities.findFirst(at -> at.getId().equals(activity.getId()));
-            activities.moveNodeForward(act);
+            activities.moveNodeForward(activity);
+            activities.forEach(v -> System.out.println(v.toString()),false);
 
             parentContainer.getChildren().remove(currentIndex);
             parentContainer.getChildren().add(currentIndex + 1, card);
+            manager.saveData();
         }
     }
 }
