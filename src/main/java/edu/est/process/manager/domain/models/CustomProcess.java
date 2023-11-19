@@ -6,6 +6,7 @@ import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
 import edu.est.process.manager.domain.util.IDGenerator;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.PrimitiveIterator;
 
 public class CustomProcess {
@@ -85,6 +86,46 @@ public class CustomProcess {
         process.add("activities",activityArray);
         process.addProperty("totalDurationMinutes",totalDurationMinutes);
         return process;
+    }
+
+    //Buscamos una tarea desde el inicio del proceso
+    public Task findTaskFromStart(String taskId) {
+        Iterator<Activity> iterator = activities.iterator();
+        while (iterator.hasNext()) {
+            Activity activity = iterator.next();
+            Task foundTask = activity.findTaskById(taskId);
+            if (foundTask != null) {
+                return foundTask;
+            }
+        }
+        return null; // La tarea no se encontró en el proceso
+    }
+
+    //Buscamos una tarea desde la actividad actual
+    public Task findTaskFromCurrentActivity(String currentActivityId, String taskId) {
+        Activity currentActivity = getActivity(currentActivityId);
+        if (currentActivity != null) {
+            Task foundTask = currentActivity.findTaskById(taskId);
+            if (foundTask != null) {
+                return foundTask;
+            }
+        }
+        return null; // La tarea no se encontró en la actividad actual
+    }
+
+    //Buscamos una tarea desde una actividad dada su nombre
+    public Task findTaskFromActivityByName(String activityName, String taskId) {
+        Iterator<Activity> iterator = activities.iterator();
+        while (iterator.hasNext()) {
+            Activity activity = iterator.next();
+            if (activity.getName().equals(activityName)) {
+                Task foundTask = activity.findTaskById(taskId);
+                if (foundTask != null) {
+                    return foundTask;
+                }
+            }
+        }
+        return null; // La tarea no se encontró en la actividad con el nombre dado
     }
 
     public void setId(String id) {
