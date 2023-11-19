@@ -170,6 +170,44 @@ public class CustomDoublyLinkedList<E> {
         return node.element;
     }
 
+    public void moveNodeBackward(E element) {
+        Node<E> current = head.next;
+        while (current != tail && current.next != tail) {
+            if (current.element.equals(element)) {
+                Node<E> previous = current.prev;
+                Node<E> next = current.next;
+
+                previous.next = next;
+                next.prev = previous;
+
+                previous.prev.next = current;
+                current.prev = previous.prev;
+                current.next = previous;
+                return;
+            }
+            current = current.next;
+        }
+    }
+
+    public void moveNodeForward(E element) {
+        Node<E> current = head.next;
+        while (current != tail && current.next != tail) {
+            if (current.element.equals(element)) {
+                Node<E> previous = current.prev;
+                Node<E> next = current.next;
+
+                previous.next = next;
+                next.prev = previous;
+
+                next.next.prev = current;
+                current.next = next.next;
+                next.next = current;
+                current.prev = next;
+                return;
+            }
+            current = current.next;
+        }
+    }
     /**
      * Converts a standard List to a CustomDoublyLinkedList.
      *

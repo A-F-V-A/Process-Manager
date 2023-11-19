@@ -3,6 +3,7 @@ package edu.est.process.manager.infrastructure.javafx.components;
 import edu.est.process.manager.domain.models.Activity;
 import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
+import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -91,16 +92,25 @@ public class CActivity {
         VBox parentContainer = (VBox) card.getParent();
         int currentIndex = parentContainer.getChildren().indexOf(card);
         if (currentIndex > 0) {
-            // Remover la tarjeta y volver a añadirla en la posición anterior
+            CustomDoublyLinkedList<Activity> activities = process.getActivities();
+            Activity act = activities.findFirst(at -> at.getId().equals(activity.getId()));
+            activities.moveNodeBackward(act);
+
             parentContainer.getChildren().remove(currentIndex);
             parentContainer.getChildren().add(currentIndex - 1, card);
+            manager.saveData();
         }
     }
     private void moveCardDown(VBox card) {
         VBox parentContainer = (VBox) card.getParent();
         int currentIndex = parentContainer.getChildren().indexOf(card);
+
         if (currentIndex < parentContainer.getChildren().size() - 1) {
-            // Remover la tarjeta y volver a añadirla en la siguiente posición
+
+            CustomDoublyLinkedList<Activity> activities = process.getActivities();
+            Activity act = activities.findFirst(at -> at.getId().equals(activity.getId()));
+            activities.moveNodeForward(act);
+
             parentContainer.getChildren().remove(currentIndex);
             parentContainer.getChildren().add(currentIndex + 1, card);
         }
