@@ -24,6 +24,10 @@
     -fx-background-color: #34495E;
 }
 
+.nav-active{
+    -fx-background-color: #34495E;
+}
+
 .search-field {
     -fx-background-color: #ffffff, #ffffff, #dce4f2;
     -fx-background-insets: 0, 1, 2.6;
@@ -199,4 +203,7 @@
     -fx-border-color: #de6951;
     -fx-border-width: 1;
 }
+
+
+
 

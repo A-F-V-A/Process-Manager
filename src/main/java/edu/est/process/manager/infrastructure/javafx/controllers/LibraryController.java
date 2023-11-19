@@ -14,6 +14,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -26,29 +27,43 @@ public class LibraryController implements Initializable {
     private ProcessManager manager;
     @FXML
     public AnchorPane p_container;
+    @FXML
+    public Button b_process;
+    @FXML
+    public Button b_notifications;
+    @FXML
+    public Button b_import_export;
+    @FXML
+    public TextField searchField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         manager = ProcessManager.getInstance();
         manager.loadData();
+        navActive("b_process");
         ViewProcess();
     }
 
     @FXML
     public void handleViewProcessClick(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        navActive(source.getId());
         clear();
         ViewProcess();
     }
 
     @FXML
     public void handleViewNotificationClick(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        navActive(source.getId());
         clear();
         Notification();
     }
 
     @FXML
     public void handleViewImportExportClick(ActionEvent event) {
-
+        Node source = (Node) event.getSource();
+        navActive(source.getId());
     }
 
 
@@ -109,5 +124,32 @@ public class LibraryController implements Initializable {
     }
     private void clear(){
         p_container.getChildren().clear();
+    }
+
+
+    private void navActive(String id){
+        String clasName = "nav-active";
+        switch (id) {
+            case "b_process" -> {
+                b_process.getStyleClass().add(clasName);
+                b_notifications.getStyleClass().remove(clasName);
+                b_import_export.getStyleClass().remove(clasName);
+            }
+            case "b_notifications" -> {
+                b_process.getStyleClass().remove(clasName);
+                b_notifications.getStyleClass().add(clasName);
+                b_import_export.getStyleClass().remove(clasName);
+            }
+            case "b_import_export" -> {
+                b_process.getStyleClass().remove(clasName);
+                b_notifications.getStyleClass().remove(clasName);
+                b_import_export.getStyleClass().add(clasName);
+            }
+            default -> {
+                b_process.getStyleClass().remove(clasName);
+                b_notifications.getStyleClass().remove(clasName);
+                b_import_export.getStyleClass().remove(clasName);
+            }
+        }
     }
 }
