@@ -124,7 +124,6 @@ public class CProcess {
 
     }
 
-
     private void handleViewAction() {
         // Acción para el botón "View"
         System.out.println("View action for " + id);
@@ -137,5 +136,4 @@ public class CProcess {
 
         return String.format("%d:%02d", hours, minutes);
     }
-
 }

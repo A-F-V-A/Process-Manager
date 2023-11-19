@@ -3,7 +3,6 @@ package application;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import edu.est.process.manager.domain.models.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

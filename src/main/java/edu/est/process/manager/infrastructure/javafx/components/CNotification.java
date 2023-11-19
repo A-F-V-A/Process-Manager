@@ -22,20 +22,27 @@ public class CNotification {
         card.setSpacing(10.0);
         card.getStyleClass().add("notification-card");
         card.setPadding(new Insets(10, 10, 10, 10));
+        double cardWidth = 300;
+        card.setPrefWidth(cardWidth);
+        card.setMaxWidth(cardWidth);
+        card.setMinWidth(cardWidth);
+        card.setPrefHeight(cardWidth);
+        card.setMaxWidth(cardWidth);
+        card.setMinWidth(cardWidth);
 
-        Text title = new Text("Cómo deseas ser notificado");
+        Text title = new Text("How would you like to be notified");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
-        appNotificationCheckbox = new CheckBox("Notificaciones de aplicación");
-        emailNotificationCheckbox = new CheckBox("Notificaciones por correo");
+        appNotificationCheckbox = new CheckBox("App notifications");
+        emailNotificationCheckbox = new CheckBox("Email notifications");
 
-        emailLabel = new Label("Introduzca su correo:");
+        emailLabel = new Label("Enter your email:");
         emailField = new TextField();
-        emailField.setPromptText("Correo electrónico");
+        emailField.setPromptText("Email");
 
-        percentageLabel = new Label("Con qué % de tiempo desea ser notificado:");
+        percentageLabel = new Label("At what % of time would you like to be notified:");
         percentageField = new TextField();
-        percentageField.setPromptText("Ingrese % (solo números)");
+        percentageField.setPromptText("Enter % (numbers only)");
         percentageField.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*")) {
                 return change;
@@ -43,16 +50,19 @@ public class CNotification {
             return null;
         }));
 
+
+
+        emailNotificationCheckbox.setOnAction(event -> handleCheckboxAction());
+        appNotificationCheckbox.setOnAction(event -> handleCheckboxAction());
+
+        Button saveButton = new Button("Save");
+        saveButton.setMaxWidth(Double.MAX_VALUE);
+        saveButton.setOnAction(event -> handleSaveAction());
+
         emailLabel.setVisible(false);
         emailField.setVisible(false);
         percentageLabel.setVisible(false);
         percentageField.setVisible(false);
-
-        emailNotificationCheckbox.setOnAction(event -> handleEmailCheckboxAction());
-        appNotificationCheckbox.setOnAction(event -> handleAppCheckboxAction());
-
-        Button saveButton = new Button("Guardar");
-        saveButton.setOnAction(event -> handleSaveAction());
 
         card.getChildren().addAll(
                 title,
@@ -108,26 +118,28 @@ public class CNotification {
         percentageField.setVisible(false);
     }
 
-    private void handleEmailCheckboxAction() {
-        boolean selected = emailNotificationCheckbox.isSelected();
-        emailLabel.setVisible(selected);
-        emailField.setVisible(selected);
-        percentageLabel.setVisible(selected);
-        percentageField.setVisible(selected);
-
-        if (selected) {
+    private void handleCheckboxAction() {
+        boolean email = emailNotificationCheckbox.isSelected();
+        boolean app = appNotificationCheckbox.isSelected();
+        if(email){
+            emailLabel.setVisible(true);
+            emailField.setVisible(true);
+            percentageLabel.setVisible(true);
+            percentageField.setVisible(true);
             appNotificationCheckbox.setSelected(false);
-        }
-    }
-
-    private void handleAppCheckboxAction() {
-        boolean selected = appNotificationCheckbox.isSelected();
-        percentageLabel.setVisible(selected);
-        percentageField.setVisible(selected);
-
-        if (selected) {
+        }else if(app){
+            emailLabel.setVisible(false);
+            emailField.setVisible(false);
+            percentageLabel.setVisible(true);
+            percentageField.setVisible(true);
             emailNotificationCheckbox.setSelected(false);
-            handleEmailCheckboxAction(); // Para ocultar los campos relacionados a correo
+        }else{
+            emailLabel.setVisible(false);
+            emailField.setVisible(false);
+            percentageLabel.setVisible(false);
+            percentageField.setVisible(false);
+            appNotificationCheckbox.setSelected(false);
+            emailNotificationCheckbox.setSelected(false);
         }
     }
 }
