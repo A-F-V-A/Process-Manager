@@ -3,7 +3,9 @@ package edu.est.process.manager.domain.structures;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 /**
@@ -26,7 +28,7 @@ public class CustomDoublyLinkedList<E> {
      * A node within the doubly linked list.
      * This inner class is static because it does not need access to the instance variables of CustomDoublyLinkedList.
      */
-    private static class Node<E> {
+    public static class Node<E> {
         E element;
         Node<E> next;
         Node<E> prev;
@@ -274,5 +276,20 @@ public class CustomDoublyLinkedList<E> {
         }
     }
 
+    public Iterator<E> iterator() {
+        return new Iterator<E>() {
+            private Node<E> current = head;
 
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            public E next() {
+                E data = current.element;
+                current = current.next;
+                return data;
+            }
+        };
+    }
 }
+

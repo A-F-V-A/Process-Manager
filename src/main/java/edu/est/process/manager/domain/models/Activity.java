@@ -110,6 +110,20 @@ public class Activity  {
         return activity;
     }
 
+    public Task findTaskById(String taskId) {
+        for (Task task : pendingTasks.toList()) {
+            if (task.getId().equals(taskId)) {
+                return task;
+            }
+        }
+        for (Task task : completedTasks.toList()) {
+            if (task.getId().equals(taskId)) {
+                return task;
+            }
+        }
+        return null; // La tarea no se encontró en esta actividad
+    }
+
     public void setId(String id) {
         this.id = id;
     }

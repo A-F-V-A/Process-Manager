@@ -96,8 +96,6 @@ public class CNotification {
             return; // Salir si hay un error al parsear el porcentaje
         }
 
-        // Realiza acciones con los valores obtenidos, como almacenarlos en una base de datos, enviarlos a un servidor, etc.
-        // Ejemplo: podrías imprimir los valores obtenidos
         System.out.println("Notificaciones de app: " + appNotificationSelected);
         System.out.println("Notificaciones por correo: " + emailNotificationSelected);
         System.out.println("Correo electrónico: " + emailAddress);
