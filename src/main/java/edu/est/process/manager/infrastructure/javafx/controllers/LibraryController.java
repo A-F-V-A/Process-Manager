@@ -112,9 +112,17 @@ public class LibraryController implements Initializable {
         floatingButton.setOnAction(event -> {
             CModal createProcess = new CModal(manager,container,event);
             boolean viewActivity =  container.getStyleClass().contains("Activity");
-            VBox modal = createProcess.render(viewActivity);
-            modal.setId("modal-process");
+            List<Node> nodeFilter = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("task-view"));
 
+            VBox modal;
+            if (nodeFilter.size() == 1)
+                modal = createProcess.render();
+            else
+                modal = createProcess.render(viewActivity);
+
+
+
+            modal.setId("modal-process");
 
             if(nodeExists("modal-process")) return;
 

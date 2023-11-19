@@ -90,105 +90,7 @@ public class CActivity {
 
         return card;
     }
-    private void handleCloseAction(VBox card) {
-        if (card.getParent() != null) {
-            CustomDoublyLinkedList<Activity> activities = process.getActivities();
-            activities.removeIf(at -> at.equals(activity));
-            ((Pane) card.getParent()).getChildren().remove(card);
-            manager.saveData();
-        }
-    }
-    private void moveCardUp(VBox card) {
-        VBox parentContainer = (VBox) card.getParent();
-        int currentIndex = parentContainer.getChildren().indexOf(card);
-        if (currentIndex > 0) {
-            // CustomProcess aux = manager.getProcess(process.getId());
-            CustomDoublyLinkedList<Activity> activities = process.getActivities();
-            activities.moveNodeBackward(activity);
-            activities.forEach(v -> System.out.println(v.toString()),false);
-            parentContainer.getChildren().remove(currentIndex);
-            parentContainer.getChildren().add(currentIndex - 1, card);
-
-            manager.saveData();
-        }
-    }
-    private void moveCardDown(VBox card) {
-        VBox parentContainer = (VBox) card.getParent();
-        int currentIndex = parentContainer.getChildren().indexOf(card);
-
-        if (currentIndex < parentContainer.getChildren().size() - 1) {
-            //CustomProcess aux = manager.getProcess(process.getId());
-            CustomDoublyLinkedList<Activity> activities = process.getActivities();
-            activities.moveNodeForward(activity);
-            activities.forEach(v -> System.out.println(v.toString()),false);
-
-            parentContainer.getChildren().remove(currentIndex);
-            parentContainer.getChildren().add(currentIndex + 1, card);
-            manager.saveData();
-        }
-    }
-    private void handleUpdateAction(VBox card, ActionEvent event) {
-        if(!isEditMode){
-            for (Node node : card.getChildren()) {
-                if (node instanceof Text) {
-                    Text textNode = (Text) node;
-                    if ("card-title".equals(textNode.getStyleClass().get(0))) {
-                        // Reemplazar el Text del título por un TextField
-                        TextField titleField = new TextField(textNode.getText());
-                        titleField.getStyleClass().add("text-modal"); // Agrega tu clase de estilo si es necesario
-                        card.getChildren().set(card.getChildren().indexOf(textNode), titleField);
-                    } else if ("card-description".equals(textNode.getStyleClass().get(0))) {
-                        // Reemplazar el Text de la descripción por un TextArea
-                        TextArea descriptionArea = new TextArea(textNode.getText());
-                        descriptionArea.getStyleClass().add("area-modal"); // Agrega tu clase de estilo si es necesario
-                        card.getChildren().set(card.getChildren().indexOf(textNode), descriptionArea);
-                    }
-                }
-            }
-        }else{
-            for (Node node : card.getChildren()) {
-                if (node instanceof TextField && node.getStyleClass().contains("text-modal")) {
-                    TextField titleField = (TextField) node;
-                    activity.setName(titleField.getText());
-                    Text textTitle = new Text(activity.getName());
-                    textTitle.getStyleClass().add("card-title");
-                    card.getChildren().set(card.getChildren().indexOf(node), textTitle);
-                } else if (node instanceof TextArea && node.getStyleClass().contains("area-modal")) {
-                    TextArea descriptionArea = (TextArea) node;
-                    activity.setDescription(descriptionArea.getText());
-                    Text textDescription = new Text(activity.getDescription());
-                    textDescription.getStyleClass().add("card-description");
-                    card.getChildren().set(card.getChildren().indexOf(node), textDescription);
-                }
-            }
-            CustomDoublyLinkedList<Activity> activities = process.getActivities();
-            Activity uptActivity = activities.findFirst(act -> act.equals(activity));
-            uptActivity.setDescription(activity.getDescription());
-            uptActivity.setName(activity.getName());
-            manager.saveData();
-        }
-        isEditMode = !isEditMode;
-
-    }
-
-    private void handleViewAction() {
-        System.out.println(container);
-        ScrollPane scrollPane = findScrollPaneParent(container.getParent());
-        if (scrollPane != null) {
-            VBox tasksContainer = renderTasks();
-            scrollPane.setContent(tasksContainer);
-            scrollPane.setFitToWidth(true);
-        }
-
-    }
-
-    private ScrollPane findScrollPaneParent(Node node) {
-        while (node != null && !(node instanceof ScrollPane)) {
-            node = node.getParent();
-        }
-        return (ScrollPane) node;
-    }
-    public VBox renderTasks() {
+    private  VBox renderTasks() {
         /*
         VBox tasksContainer = new VBox(10);
         tasksContainer.getStyleClass().add("tasks-container");
@@ -285,7 +187,104 @@ public class CActivity {
         return tasksContainer;
 
     }
+    private void handleCloseAction(VBox card) {
+        if (card.getParent() != null) {
+            CustomDoublyLinkedList<Activity> activities = process.getActivities();
+            activities.removeIf(at -> at.equals(activity));
+            ((Pane) card.getParent()).getChildren().remove(card);
+            manager.saveData();
+        }
+    }
+    private void moveCardUp(VBox card) {
+        VBox parentContainer = (VBox) card.getParent();
+        int currentIndex = parentContainer.getChildren().indexOf(card);
+        if (currentIndex > 0) {
+            // CustomProcess aux = manager.getProcess(process.getId());
+            CustomDoublyLinkedList<Activity> activities = process.getActivities();
+            activities.moveNodeBackward(activity);
+            activities.forEach(v -> System.out.println(v.toString()),false);
+            parentContainer.getChildren().remove(currentIndex);
+            parentContainer.getChildren().add(currentIndex - 1, card);
 
+            manager.saveData();
+        }
+    }
+    private void moveCardDown(VBox card) {
+        VBox parentContainer = (VBox) card.getParent();
+        int currentIndex = parentContainer.getChildren().indexOf(card);
+
+        if (currentIndex < parentContainer.getChildren().size() - 1) {
+            //CustomProcess aux = manager.getProcess(process.getId());
+            CustomDoublyLinkedList<Activity> activities = process.getActivities();
+            activities.moveNodeForward(activity);
+            activities.forEach(v -> System.out.println(v.toString()),false);
+
+            parentContainer.getChildren().remove(currentIndex);
+            parentContainer.getChildren().add(currentIndex + 1, card);
+            manager.saveData();
+        }
+    }
+    private void handleUpdateAction(VBox card, ActionEvent event) {
+        if(!isEditMode){
+            for (Node node : card.getChildren()) {
+                if (node instanceof Text) {
+                    Text textNode = (Text) node;
+                    if ("card-title".equals(textNode.getStyleClass().get(0))) {
+                        // Reemplazar el Text del título por un TextField
+                        TextField titleField = new TextField(textNode.getText());
+                        titleField.getStyleClass().add("text-modal"); // Agrega tu clase de estilo si es necesario
+                        card.getChildren().set(card.getChildren().indexOf(textNode), titleField);
+                    } else if ("card-description".equals(textNode.getStyleClass().get(0))) {
+                        // Reemplazar el Text de la descripción por un TextArea
+                        TextArea descriptionArea = new TextArea(textNode.getText());
+                        descriptionArea.getStyleClass().add("area-modal"); // Agrega tu clase de estilo si es necesario
+                        card.getChildren().set(card.getChildren().indexOf(textNode), descriptionArea);
+                    }
+                }
+            }
+        }else{
+            for (Node node : card.getChildren()) {
+                if (node instanceof TextField && node.getStyleClass().contains("text-modal")) {
+                    TextField titleField = (TextField) node;
+                    activity.setName(titleField.getText());
+                    Text textTitle = new Text(activity.getName());
+                    textTitle.getStyleClass().add("card-title");
+                    card.getChildren().set(card.getChildren().indexOf(node), textTitle);
+                } else if (node instanceof TextArea && node.getStyleClass().contains("area-modal")) {
+                    TextArea descriptionArea = (TextArea) node;
+                    activity.setDescription(descriptionArea.getText());
+                    Text textDescription = new Text(activity.getDescription());
+                    textDescription.getStyleClass().add("card-description");
+                    card.getChildren().set(card.getChildren().indexOf(node), textDescription);
+                }
+            }
+            CustomDoublyLinkedList<Activity> activities = process.getActivities();
+            Activity uptActivity = activities.findFirst(act -> act.equals(activity));
+            uptActivity.setDescription(activity.getDescription());
+            uptActivity.setName(activity.getName());
+            manager.saveData();
+        }
+        isEditMode = !isEditMode;
+
+    }
+    private void handleViewAction() {
+        System.out.println(container);
+        ScrollPane scrollPane = findScrollPaneParent(container.getParent());
+        if (scrollPane != null) {
+
+            VBox tasksContainer = renderTasks();
+            tasksContainer.getStyleClass().add("task-view");
+            scrollPane.setContent(tasksContainer);
+            scrollPane.setFitToWidth(true);
+        }
+
+    }
+    private ScrollPane findScrollPaneParent(Node node) {
+        while (node != null && !(node instanceof ScrollPane)) {
+            node = node.getParent();
+        }
+        return (ScrollPane) node;
+    }
     public void setContainer(VBox container) {
         this.container = container;
     }

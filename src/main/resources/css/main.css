@@ -272,6 +272,46 @@
     -fx-background-color: #c9302c;
 }
 
+/* Estilo general para ComboBox */
+.combo-box {
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4px;
+}
+
+/* Estilo para el área de despliegue del ComboBox */
+.combo-box-base {
+    -fx-padding: 4px 8px;
+}
+
+/* Estilo para la lista de opciones del ComboBox */
+.combo-box-popup .list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+}
+
+/* Estilo para las celdas de opciones dentro del ComboBox */
+.combo-box-popup .list-cell {
+    -fx-padding: 10px;
+    -fx-text-fill: #495057;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #bebfc0;
+}
+
+/* Estilo para la flecha desplegable del ComboBox */
+.combo-box .arrow {
+    -fx-background-color: #6c757d;
+    -fx-shape: "M0 0h7L3.5 4.5z"; /* Forma de flecha hacia abajo */
+}
+
+.combo-box .arrow-button:hover {
+    -fx-background-color: #f66b4e;
+    -fx-text-fill: white;
+}
+
 
 
 
