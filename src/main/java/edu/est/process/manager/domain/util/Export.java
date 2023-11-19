@@ -15,10 +15,16 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- * Clase que gestiona la exportación de datos a archivos CSV y Excel.
+ * Clase que gestiona la exportación e importacion de datos a archivos Excel.
  */
 public class Export {
 
+    /**
+     * Exporta los datos a un archivo Excel en el path especificado.
+     *
+     * @param filePath Ruta donde se guardará el archivo Excel.
+     * @throws IOException Si ocurre un error durante la escritura del archivo.
+     */
     public static void exportToExcel(String filePath) throws IOException {
         Export export = new Export();
         List<String[]> data = export.loadDataForExcel();
@@ -52,7 +58,14 @@ public class Export {
 
             workbook.write(fileOut);
         }
-    }    public List<String[]> loadDataForExcel() {
+    }
+
+    /**
+     * Carga los datos para su exportación a un archivo Excel.
+     *
+     * @return Lista de arrays de strings que representan los datos a exportar.
+     */
+    public List<String[]> loadDataForExcel() {
         List<String[]> excelData = new ArrayList<>();
 
         ProcessManager processManager = ProcessManager.getInstance();
@@ -120,6 +133,13 @@ public class Export {
         return completedTasksInfo;
     }
 
+    /**
+     * Importa datos desde un archivo Excel en el path especificado.
+     *
+     * @param filePath Ruta del archivo Excel desde donde se importarán los datos.
+     * @return Lista de arrays de strings que representan los datos importados.
+     * @throws IOException Si ocurre un error durante la lectura del archivo.
+     */
     public List<String[]> importFromExcel(String filePath) throws IOException {
 
         if (!validateExcelFile(filePath)) {
@@ -162,6 +182,12 @@ public class Export {
         return importedData;
     }
 
+    /**
+     * Valida si el archivo Excel cumple con los criterios requeridos.
+     *
+     * @param filePath Ruta del archivo Excel a validar.
+     * @return true si el archivo cumple con los criterios, false de lo contrario.
+     */
     public boolean validateExcelFile(String filePath) {
         try (FileInputStream fileInputStream = new FileInputStream(filePath);
              Workbook workbook = new XSSFWorkbook(fileInputStream)) {

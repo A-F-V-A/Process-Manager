@@ -19,11 +19,23 @@ public class ExportTest {
             export.exportToExcel(filePath);
             File file = new File(filePath);
             assertTrue(file.exists());
+
+            List<String[]> importedData = export.importFromExcel(filePath);
+
+            // Verificar que se haya cargado algún dato como al momento no tenemos datos fallara.
+            assertNotNull(importedData);
+            assertFalse(importedData.isEmpty());
+
+            int expectedColumns = 12; // Ajustar según las columnas esperadas
+            for (String[] rowData : importedData) {
+                assertEquals(expectedColumns, rowData.length);
+            }
+
+
         } catch (IOException e) {
             fail("Se produjo una excepción al exportar a Excel: " + e.getMessage());
         }
     }
-
     @Test
     public void testLoadDataForExcel() {
         Export export = new Export();
@@ -54,6 +66,7 @@ public class ExportTest {
             assertEquals(expectedColumns, rowData.length);
         }
     }
+
     @Test
     public void testImportFromExcelValidFile() {
         String validFilePath = "C:\\Users\\MI PC\\Documents\\IngenieriaDeSistemas\\Semestre5\\EstructuraDatos\\Process-Manager\\test.xlsx";
