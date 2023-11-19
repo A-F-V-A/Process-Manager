@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Custom implementation of a doubly linked list.
@@ -95,7 +96,7 @@ public class CustomDoublyLinkedList<E> {
      * @param predicate a predicate to apply to each element to determine if it should be returned
      * @return the first matching element, or null if no element matches
      */
-    public E findFirst(java.util.function.Predicate<E> predicate) {
+    public E findFirst(Predicate<E> predicate) {
         Node<E> current = head.next;
         while (current != tail) {
             if (predicate.test(current.element)) {
@@ -104,6 +105,18 @@ public class CustomDoublyLinkedList<E> {
             current = current.next;
         }
         return null;
+    }
+
+    public List<E> findAll(Predicate<E> predicate) {
+        List<E> matchingElements = new ArrayList<>();
+        Node<E> current = head.next;
+        while (current != tail) {
+            if (predicate.test(current.element)) {
+                matchingElements.add(current.element);
+            }
+            current = current.next;
+        }
+        return matchingElements;
     }
 
     /**

@@ -60,11 +60,11 @@ public class CActivity {
         cardDescription.getStyleClass().add("card-description");
 
         // Botones de acción
-        Button viewButton = new Button("View");
+        Button viewButton = new Button("View Tasks");
         viewButton.getStyleClass().add("card-button");
         // viewButton.setOnAction(event -> handleViewAction());
 
-        Button updateButton = new Button("Update");
+        Button updateButton = new Button("Update Activity");
         updateButton.getStyleClass().add("card-button");
         updateButton.setOnAction(event -> handleUpdateAction(card,event));
 

@@ -14,6 +14,14 @@ public class NodeExplorer {
         return matchingNodes;
     }
 
+    /*
+    *   Encontrar todos los nodos con una clase específica
+        List<Node> nodesWithClass = NodeExplorer.findNodes(root, node -> node.getStyleClass().contains("mi-clase-especifica"));
+
+        Encontrar todos los nodos con un ID específico
+        List<Node> nodesWithId = NodeExplorer.findNodes(root, node -> "mi-id-especifico".equals(node.getId()));
+    * */
+
     private static void traverseNodes(Node node, NodeCondition condition, List<Node> matchingNodes) {
         if (condition.test(node)) {
             matchingNodes.add(node);

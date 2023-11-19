@@ -60,11 +60,11 @@ public class CProcess {
         cardTime.getStyleClass().add("time-text");
 
         // Botones de acción
-        Button viewButton = new Button("View");
+        Button viewButton = new Button("View Activity");
         viewButton.getStyleClass().add("card-button");
         viewButton.setOnAction(event -> handleViewAction());
 
-        Button updateButton = new Button("Update");
+        Button updateButton = new Button("Update Process");
         updateButton.getStyleClass().add("card-button");
         updateButton.setOnAction(event -> handleUpdateAction(card,event));
 
@@ -136,6 +136,7 @@ public class CProcess {
 
         if (scrollPane != null) {
             VBox containerActivity = new VBox(10);
+            containerActivity.getStyleClass().add("activity-filter");
             containerActivity.setId(id);
             CustomProcess process = manager.getProcess(id);
 
