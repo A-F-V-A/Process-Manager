@@ -24,6 +24,10 @@
     -fx-background-color: #34495E;
 }
 
+.nav-active{
+    -fx-background-color: #34495E;
+}
+
 .search-field {
     -fx-background-color: #ffffff, #ffffff, #dce4f2;
     -fx-background-insets: 0, 1, 2.6;
@@ -154,6 +158,52 @@
 .button-modal:pressed {
     -fx-background-color: #ff4a1f; /* Color de fondo al hacer clic */
 }
+
+
+.notification-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 10);
+}
+
+.notification-card .text-field, .notification-card .text-area {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+}
+
+.notification-card .text-field:focused, .notification-card .text-area:focused {
+    -fx-border-color: #FF5733;
+}
+
+.notification-card .button {
+    -fx-background-color: #FF5733;
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.notification-card .button:hover {
+    -fx-background-color: #f66b4e; /* Color de fondo al pasar el mouse */
+}
+
+.notification-card .check-box {
+    -fx-font-size: 14px;
+}
+
+.notification-card .check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #de6951;
+    -fx-border-width: 1;
+}
+
 
 
 

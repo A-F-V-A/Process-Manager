@@ -6,12 +6,15 @@ import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
 import edu.est.process.manager.infrastructure.javafx.components.CModal;
 import edu.est.process.manager.infrastructure.javafx.components.CProcess;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -24,14 +27,43 @@ public class LibraryController implements Initializable {
     private ProcessManager manager;
     @FXML
     public AnchorPane p_container;
+    @FXML
+    public Button b_process;
+    @FXML
+    public Button b_notifications;
+    @FXML
+    public Button b_import_export;
+    @FXML
+    public TextField searchField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        Process();
+        manager = ProcessManager.getInstance();
+        manager.loadData();
+        navActive("b_process");
+        ViewProcess();
+    }
+
+    @FXML
+    public void handleViewProcessClick(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        navActive(source.getId());
+        clear();
+        ViewProcess();
+    }
+
+    @FXML
+    public void handleViewNotificationClick(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        navActive(source.getId());
+        clear();
         Notification();
-//        manager = ProcessManager.getInstance();
-//        manager.loadData();
-//        ViewProcess();
+    }
+
+    @FXML
+    public void handleViewImportExportClick(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        navActive(source.getId());
     }
 
 
@@ -71,26 +103,16 @@ public class LibraryController implements Initializable {
         AnchorPane.setBottomAnchor(floatingButton, 10.0);
         AnchorPane.setRightAnchor(floatingButton, 20.0);
     }
-
     private void Notification() {
         VBox container = new VBox(10);
-        CNotification process = new CNotification();
-        VBox card = process.render();
-        container.getChildren().add(card);
+        CNotification notification = new CNotification();
+        VBox component = notification.render();
+        p_container.getChildren().add(component);
 
-
-        ScrollPane scrollPane = new ScrollPane(container);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
-
-        VBox centeringnContainer = new VBox(scrollPane);
-        centeringnContainer.setAlignment(Pos.CENTER);
-
-        p_container.getChildren().add(scrollPane);
-        AnchorPane.setTopAnchor(scrollPane, 5.0);
-        AnchorPane.setRightAnchor(scrollPane, 5.0);
-        AnchorPane.setBottomAnchor(scrollPane, 5.0);
-        AnchorPane.setLeftAnchor(scrollPane, 5.0);
+        double xPosition = (p_container.getWidth() - 300.0) / 2;
+        double yPosition = (p_container.getHeight() - 300.0) / 2;
+        component.setLayoutX(xPosition);
+        component.setLayoutY(yPosition);
     }
     private boolean nodeExists(String id) {
         for (Node child : p_container.getChildren()) {
@@ -99,5 +121,35 @@ public class LibraryController implements Initializable {
             }
         }
         return false; // the node not exist
+    }
+    private void clear(){
+        p_container.getChildren().clear();
+    }
+
+
+    private void navActive(String id){
+        String clasName = "nav-active";
+        switch (id) {
+            case "b_process" -> {
+                b_process.getStyleClass().add(clasName);
+                b_notifications.getStyleClass().remove(clasName);
+                b_import_export.getStyleClass().remove(clasName);
+            }
+            case "b_notifications" -> {
+                b_process.getStyleClass().remove(clasName);
+                b_notifications.getStyleClass().add(clasName);
+                b_import_export.getStyleClass().remove(clasName);
+            }
+            case "b_import_export" -> {
+                b_process.getStyleClass().remove(clasName);
+                b_notifications.getStyleClass().remove(clasName);
+                b_import_export.getStyleClass().add(clasName);
+            }
+            default -> {
+                b_process.getStyleClass().remove(clasName);
+                b_notifications.getStyleClass().remove(clasName);
+                b_import_export.getStyleClass().remove(clasName);
+            }
+        }
     }
 }

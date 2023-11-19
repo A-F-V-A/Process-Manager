@@ -6,24 +6,21 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="600" prefWidth="900" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.est.process.manager.infrastructure.javafx.controllers.LibraryController">
         <HBox alignment="CENTER" spacing="15.0" styleClass="nav" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <TextField fx:id="searchField" prefHeight="26.0" prefWidth="190.0" promptText="Look for" styleClass="search-field" HBox.hgrow="NEVER" />
-            <Button fx:id="b_process" styleClass="nav-button" text="Processes" HBox.hgrow="ALWAYS">
+            <Button fx:id="b_process" onAction="#handleViewProcessClick" styleClass="nav-button" text="Processes" HBox.hgrow="ALWAYS">
                  <cursor>
                     <Cursor fx:constant="HAND" />
                  </cursor>
             </Button>
-            <Button fx:id="b_notifications" styleClass="nav-button" text="Notifications" HBox.hgrow="ALWAYS">
+            <Button fx:id="b_notifications" onAction="#handleViewNotificationClick" styleClass="nav-button" text="Notifications" HBox.hgrow="ALWAYS">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
             </Button>
-             <Button fx:id="b_export" styleClass="nav-button" text="Export" HBox.hgrow="ALWAYS">
+             <Button fx:id="b_import_export" onAction="#handleViewImportExportClick" styleClass="nav-button" text="Import/Export" HBox.hgrow="ALWAYS">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -32,7 +29,8 @@
                  <Insets bottom="5.0" top="5.0" />
               </padding>
         </HBox>
-   <AnchorPane fx:id="p_container" layoutX="-1.0" layoutY="130.0" prefHeight="200.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="54.0">
-
-   </AnchorPane>
+        <AnchorPane fx:id="p_container" layoutX="-1.0" layoutY="130.0" prefHeight="200.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="54.0">
+      <padding>
+         <Insets top="10.0" />
+      </padding></AnchorPane>
 </AnchorPane>
