@@ -207,11 +207,11 @@
     -fx-background-color: #f66b4e; /* Color de fondo al pasar el mouse */
 }
 
-.notification-card .check-box {
+.check-box {
     -fx-font-size: 14px;
 }
 
-.notification-card .check-box .box {
+.check-box .box {
     -fx-background-color: white;
     -fx-border-color: #de6951;
     -fx-border-width: 1;

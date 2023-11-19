@@ -275,5 +275,4 @@ public class CustomDoublyLinkedList<E> {
     }
 
 
-
 }

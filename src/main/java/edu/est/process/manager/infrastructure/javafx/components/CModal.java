@@ -3,6 +3,7 @@ package edu.est.process.manager.infrastructure.javafx.components;
 import edu.est.process.manager.domain.models.Activity;
 import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
+import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
 import edu.est.process.manager.infrastructure.javafx.util.NodeExplorer;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -96,10 +97,17 @@ public class CModal {
             String id = container.getId();
             Activity activity = new Activity(name,description);
             CustomProcess process = manager.getProcess(id);
+            CustomDoublyLinkedList<Activity> verify = process.getActivities();
+
+            Activity aux = verify.findFirst(act -> act.getName().equals(name));
+            if (aux != null) return;
+
+
             Node root = (Node) event.getSource();
             List<Node> nodesWithId = NodeExplorer.findNodes(root.getParent(), node -> id.equals(node.getId()));
             if (nodesWithId.get(0) instanceof VBox){
                 VBox containerActivity = (VBox) nodesWithId.get(0);
+
                 process.addActivity(activity);
                 CActivity renderActivity = new CActivity(process,activity,manager);
                 containerActivity.getChildren().add(renderActivity.render());
