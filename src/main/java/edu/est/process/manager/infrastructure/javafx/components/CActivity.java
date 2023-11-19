@@ -1,27 +1,26 @@
 package edu.est.process.manager.infrastructure.javafx.components;
 
-import edu.est.process.manager.domain.models.Activity;
-import edu.est.process.manager.domain.models.CustomProcess;
-import edu.est.process.manager.domain.models.ProcessManager;
+import edu.est.process.manager.domain.models.*;
 import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
+import edu.est.process.manager.infrastructure.javafx.util.NodeExplorer;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.util.List;
+
 public class CActivity {
     private final ProcessManager manager;
     private final CustomProcess process;
     private Activity activity;
+    private VBox container;
     private boolean isEditMode = false;
     public CActivity(CustomProcess process,Activity activity, ProcessManager manager){
         this.manager = manager;
@@ -62,7 +61,7 @@ public class CActivity {
         // Botones de acción
         Button viewButton = new Button("View Tasks");
         viewButton.getStyleClass().add("card-button");
-        // viewButton.setOnAction(event -> handleViewAction());
+        viewButton.setOnAction(event -> handleViewAction());
 
         Button updateButton = new Button("Update Activity");
         updateButton.getStyleClass().add("card-button");
@@ -170,5 +169,124 @@ public class CActivity {
         }
         isEditMode = !isEditMode;
 
+    }
+
+    private void handleViewAction() {
+        System.out.println(container);
+        ScrollPane scrollPane = findScrollPaneParent(container.getParent());
+        if (scrollPane != null) {
+            VBox tasksContainer = renderTasks();
+            scrollPane.setContent(tasksContainer);
+            scrollPane.setFitToWidth(true);
+        }
+
+    }
+
+    private ScrollPane findScrollPaneParent(Node node) {
+        while (node != null && !(node instanceof ScrollPane)) {
+            node = node.getParent();
+        }
+        return (ScrollPane) node;
+    }
+    public VBox renderTasks() {
+        /*
+        VBox tasksContainer = new VBox(10);
+        tasksContainer.getStyleClass().add("tasks-container");
+
+        // Sección de Tareas Pendientes
+        VBox pendingTasksContainer = new VBox(5);
+        pendingTasksContainer.getStyleClass().add("pending-tasks-container");
+        Text pendingTasksTitle = new Text("Tareas Pendientes");
+        pendingTasksTitle.getStyleClass().add("tasks-title");
+        pendingTasksContainer.getChildren().add(pendingTasksTitle);
+
+
+        for (Task task : activity.getPendingTasksAsList()) {
+            CTask cTask = new CTask(manager, activity, task);
+            pendingTasksContainer.getChildren().add(cTask.render());
+        }
+
+
+        for (int i = 0; i < 10;i++){
+            Task task = new Task("description " + i, TaskStatus.DELAYED,120 + i );
+            CTask cTask = new CTask(manager, activity, task);
+            pendingTasksContainer.getChildren().add(cTask.render());
+        }
+        // Sección de Tareas Completadas
+        VBox completedTasksContainer = new VBox(5);
+        completedTasksContainer.getStyleClass().add("completed-tasks-container");
+        Text completedTasksTitle = new Text("Tareas Completadas");
+        completedTasksTitle.getStyleClass().add("tasks-title");
+        completedTasksContainer.getChildren().add(completedTasksTitle);
+
+        for (Task task : activity.getCompletedTasksAsList()) {
+            CTask cTask = new CTask(manager, activity, task);
+            completedTasksContainer.getChildren().add(cTask.render());
+        }
+
+
+        for (int i = 0; i < 5;i++){
+            Task task = new Task("description " + i, TaskStatus.COMPLETED,120 + i );
+            CTask cTask = new CTask(manager, activity, task);
+            completedTasksContainer.getChildren().add(cTask.render());
+        }
+        // Añadir ambos contenedores al contenedor principal
+        tasksContainer.getChildren().addAll(pendingTasksContainer, completedTasksContainer);
+
+        return tasksContainer;
+         */
+        VBox tasksContainer = new VBox(10);
+        tasksContainer.getStyleClass().add("tasks-container");
+
+        // Sección de Tareas Pendientes con Título
+        VBox pendingSection = new VBox(5);
+        Text pendingTasksTitle = new Text("Tareas Pendientes");
+        pendingTasksTitle.getStyleClass().add("tasks-title");
+        pendingSection.getChildren().add(pendingTasksTitle);
+
+        VBox pendingTasksContainer = new VBox(5);
+        pendingTasksContainer.getStyleClass().add("pending-tasks-container");
+
+        for (int i = 0; i < 10;i++){
+            Task task = new Task("description " + i, TaskStatus.DELAYED,120 + i );
+            CTask cTask = new CTask(manager, activity, task);
+            pendingTasksContainer.getChildren().add(cTask.render());
+        }
+
+
+        ScrollPane pendingScrollPane = new ScrollPane(pendingTasksContainer);
+        pendingScrollPane.setFitToWidth(true);
+        pendingScrollPane.setPrefHeight(230); // Ajusta según tus necesidades
+        pendingSection.getChildren().add(pendingScrollPane);
+
+        // Sección de Tareas Completadas con Título
+        VBox completedSection = new VBox(5);
+        Text completedTasksTitle = new Text("Tareas Completadas");
+        completedTasksTitle.getStyleClass().add("tasks-title");
+        completedSection.getChildren().add(completedTasksTitle);
+
+        VBox completedTasksContainer = new VBox(5);
+        completedTasksContainer.getStyleClass().add("completed-tasks-container");
+
+        for (int i = 0; i < 5;i++){
+            Task task = new Task("description " + i, TaskStatus.COMPLETED,120 + i );
+            CTask cTask = new CTask(manager, activity, task);
+            completedTasksContainer.getChildren().add(cTask.render());
+        }
+
+        ScrollPane completedScrollPane = new ScrollPane(completedTasksContainer);
+        completedScrollPane.setFitToWidth(true);
+        completedScrollPane.setPrefHeight(230); // Ajusta según tus necesidades
+        completedSection.getChildren().add(completedScrollPane);
+
+        // Añadir secciones al contenedor principal
+        tasksContainer.getChildren().addAll(pendingSection, completedSection);
+
+        return tasksContainer;
+
+    }
+
+    public void setContainer(VBox container) {
+        this.container = container;
     }
 }

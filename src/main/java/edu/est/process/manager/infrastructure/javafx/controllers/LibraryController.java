@@ -87,6 +87,7 @@ public class LibraryController implements Initializable {
                 for (Activity act : activities) {
                     CActivity activity = new CActivity(process,act,manager);
                     vBoxNode.getChildren().add(activity.render());
+                    activity.setContainer(vBoxNode);
                 }
             }
 

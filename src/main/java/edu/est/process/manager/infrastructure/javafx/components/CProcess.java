@@ -145,6 +145,7 @@ public class CProcess {
             activities.forEach(activity ->{
                 CActivity renderActivity = new CActivity(process,activity,manager);
                 containerActivity.getChildren().add(renderActivity.render());
+                renderActivity.setContainer(containerActivity);
             },false);
 
             scrollPane.setContent(containerActivity);

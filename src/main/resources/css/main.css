@@ -217,6 +217,61 @@
     -fx-border-width: 1;
 }
 
+/* Estilo general para la tarjeta de tarea */
+.task-card {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #d0d0d0;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+    -fx-spacing: 5px;
+}
+
+/* Estilo para el título de la tarea */
+.task-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Estilo para el estado de la tarea */
+.task-status {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+}
+
+/* Estilo para los botones dentro de la tarea */
+.task-button {
+    -fx-background-color: #5cb85c;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.task-button:hover {
+    -fx-background-color: #4cae4c;
+}
+
+/* Estilo para el botón de edición */
+.task-button-edit {
+    -fx-background-color: #f0ad4e;
+}
+
+.task-button-edit:hover {
+    -fx-background-color: #ec971f;
+}
+
+/* Estilo para el botón de eliminación */
+.task-button-delete {
+    -fx-background-color: #d9534f;
+}
+
+.task-button-delete:hover {
+    -fx-background-color: #c9302c;
+}
+
 
 
 
