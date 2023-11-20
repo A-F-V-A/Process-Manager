@@ -1,9 +1,6 @@
 package edu.est.process.manager.infrastructure.javafx.components;
 
-import edu.est.process.manager.domain.models.Activity;
-import edu.est.process.manager.domain.models.CustomProcess;
-import edu.est.process.manager.domain.models.ProcessManager;
-import edu.est.process.manager.domain.models.TaskStatus;
+import edu.est.process.manager.domain.models.*;
 import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
 import edu.est.process.manager.infrastructure.javafx.util.NodeExplorer;
 import javafx.event.ActionEvent;
@@ -15,6 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.StringConverter;
+import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.NumberStringConverter;
 
 import java.util.List;
@@ -111,8 +110,8 @@ public class CModal {
             return null; // Rechaza el cambio si no son números
         };
 
-
-        TextFormatter<Number> textFormatter = new TextFormatter<>(new NumberStringConverter(), null, filter);
+        StringConverter<String> simpleConverter = new DefaultStringConverter();
+        TextFormatter<String> textFormatter = new TextFormatter<>(simpleConverter, "", filter);
         nameField.setTextFormatter(textFormatter);
 
         ComboBox<String> statusSelector = new ComboBox<>();
@@ -128,7 +127,7 @@ public class CModal {
         // Botón de acción para crear
         Button createButton = new Button("Crear");
         createButton.getStyleClass().add("button-modal");
-        // createButton.setOnAction(event -> handleCreateAction(nameField.getText(), descriptionArea.getText(),modal));
+        createButton.setOnAction(event -> handleCreateTaskAction(nameField.getText(), descriptionArea.getText(),modal,statusSelector.getValue()));
 
         // Organización de componentes
         StackPane topPane = new StackPane(closeButton);
@@ -184,58 +183,32 @@ public class CModal {
        manager.saveData();
     }
 
-    private void handleCreateTaskAction(String name, String description,VBox modal) {
-        /*
-        String nameProcess = name.replaceAll("\\s+", " ");
+    private void handleCreateTaskAction(String time, String description,VBox modal, String state) {
+        String nameProcess = time.replaceAll("\\s+", " ");
         String descriptionProcess = description.replaceAll("\\s+", " ");
 
         if(nameProcess.trim().isEmpty()) return;
         if(descriptionProcess.trim().isEmpty()) return;
 
-        if(createFlag){
-            String id = container.getId();
-            Activity activity = new Activity(name,description);
-            CustomProcess process = manager.getProcess(id);
-            CustomDoublyLinkedList<Activity> verify = process.getActivities();
+        String id = container.getId();
+        CustomProcess process = manager.getProcess(id);
+        List<Node> nodeFilter = NodeExplorer.findNodes(modal.getParent(), node -> node.getStyleClass().contains("task-view"));
+        if (nodeFilter.size() == 1 && nodeFilter.get(0) instanceof VBox) {
+            VBox vBoxNode = (VBox) nodeFilter.get(0);
+            Activity activity =  process.getActivities().findFirst(act -> act.getId().equals(vBoxNode.getId()));
+            TaskStatus stateValue = TaskStatus.valueOf(state.toUpperCase());
+            Task task = new Task(description,stateValue,Integer.parseInt(time.replaceAll(",","")));
+            activity.addTask(task);
+            process.updateTotalDuration();
+            CTask renderTask = new CTask(manager,activity,task,process.getId());
 
-            Activity aux = verify.findFirst(act -> act.getName().equals(name));
-            if (aux != null) return;
-
-
-            Node root = (Node) event.getSource();
-            List<Node> nodesWithId = NodeExplorer.findNodes(root.getParent(), node -> id.equals(node.getId()));
-            if (nodesWithId.get(0) instanceof VBox){
-                VBox containerActivity = (VBox) nodesWithId.get(0);
-
-                process.addActivity(activity);
-                CActivity renderActivity = new CActivity(process,activity,manager);
-                containerActivity.getChildren().add(renderActivity.render());
+            nodeFilter = NodeExplorer.findNodes(modal.getParent(), node -> node.getStyleClass().contains("pending-tasks-container"));
+            if (nodeFilter.size() == 1 && nodeFilter.get(0) instanceof VBox) {
+                VBox completed = (VBox) nodeFilter.get(0);
+                completed.getChildren().add(renderTask.render());
             }
-        }else{
-            CustomProcess newProcess = new CustomProcess(nameProcess,description);
-            manager.addProcess(newProcess);
-            CProcess renderProcess = new CProcess(newProcess,manager);
-            renderProcess.setContainer(container);
-            container.getChildren().add(renderProcess.render());
-
+            manager.saveData();
         }
         handleCloseAction(modal);
-        manager.saveData();
-        */
-    }
-
-    private Node findFirstChildNodeWithIdAndWithoutClass(String nodeId, String excludeClass) {
-        Node sourceNode = (Node) event.getSource();
-        Parent parent = sourceNode.getParent();
-
-        if (parent != null) {
-            for (Node child : parent.getChildrenUnmodifiable()) {
-                if (nodeId.equals(child.getId()) && !child.getStyleClass().contains(excludeClass)) {
-                    return child; // Retorna el primer nodo que cumple con los criterios
-                }
-            }
-        }
-
-        return null; // No se encontró ningún nodo que cumpla con los criterios
     }
 }

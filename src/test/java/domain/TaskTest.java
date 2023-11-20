@@ -20,7 +20,7 @@ class TaskTest {
     void taskInitializationTest() {
         Assertions.assertEquals("Test task", task.getDescription());
         Assertions.assertEquals(TaskStatus.MANDATORY, task.getStatus());
-        Assertions.assertEquals(60, task.getDurationMinutes());
+        Assertions.assertEquals(60, task.getDuration());
     }
 
     @Test

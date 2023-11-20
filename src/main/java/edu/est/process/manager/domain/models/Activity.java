@@ -44,6 +44,17 @@ public class Activity  {
         return completedTask;
     }
 
+    public Task completeTask(Task task) {
+        pendingTasks.remove(task);
+        task.setStatus(TaskStatus.COMPLETED);
+        addCompletedTasks(task);
+        return task;
+    }
+
+    public void UpdateTask(Task current, Task newTask){
+        pendingTasks.updateElement(current,newTask);
+    }
+
     public void addCompletedTasks(Task task) {
         completedTasks.enqueue(task);
     }
@@ -82,9 +93,9 @@ public class Activity  {
      */
     public int getTotalDurationMinutes() {
         int totalDuration = 0;
-        for (Task task : pendingTasks.toList()) totalDuration += task.getDurationMinutes();
+        for (Task task : pendingTasks.toList()) totalDuration += task.getDuration();
 
-        for (Task task : completedTasks.toList()) totalDuration += task.getDurationMinutes();
+        for (Task task : completedTasks.toList()) totalDuration += task.getDuration();
 
         return totalDuration;
     }

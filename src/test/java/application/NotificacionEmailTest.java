@@ -1,6 +1,6 @@
 package application;
 
-import edu.est.process.manager.domain.models.NotificacionEmail;
+import edu.est.process.manager.infrastructure.javafx.util.NotificacionEmail;
 import edu.est.process.manager.domain.models.Task;
 import edu.est.process.manager.domain.models.TaskStatus;
 import org.junit.jupiter.api.Test;
