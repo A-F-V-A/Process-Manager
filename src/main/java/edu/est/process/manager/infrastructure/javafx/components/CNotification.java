@@ -1,5 +1,8 @@
 package edu.est.process.manager.infrastructure.javafx.components;
 
+import edu.est.process.manager.domain.models.Task;
+import edu.est.process.manager.infrastructure.javafx.util.NotificacionEmail;
+import edu.est.process.manager.infrastructure.javafx.util.Notification;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -15,6 +18,17 @@ public class CNotification {
     private TextField emailField;
     private Label percentageLabel;
     private TextField percentageField;
+
+    private  Notification notificationApp;
+    private  NotificacionEmail notificacionEmail;
+
+    public CNotification(Notification notificationApp) {
+        this.notificationApp = notificationApp;
+        this.notificacionEmail = new NotificacionEmail(notificacionEmail.getEmailAddress(), " ");
+    }
+
+    public CNotification() {
+    }
 
     public VBox render() {
         VBox card = new VBox();
@@ -90,7 +104,7 @@ public class CNotification {
                 System.out.println("El porcentaje debe estar entre 0 y 100.");
                 return; // Salir si el porcentaje no está en el rango válido
             }
-            // Aquí podrías guardar el porcentaje en algún lugar o utilizarlo según tu lógica de aplicación
+
         } catch (NumberFormatException e) {
             System.out.println("Error: El porcentaje debe ser un número entero.");
             return; // Salir si hay un error al parsear el porcentaje
@@ -103,6 +117,16 @@ public class CNotification {
 
         // Limpiar los campos y deseleccionar los checkboxes
         clearFieldsAndCheckboxes();
+
+        if (appNotificationSelected) {
+            Task taskApp = new Task();
+            notificationApp.subscribe(taskApp);
+        }
+
+        if (emailNotificationSelected) {
+            Task taskEmail = new Task();
+            notificacionEmail.sendEmail(emailAddress, taskEmail, "Mensaje de notificacion");
+        }
     }
 
     private void clearFieldsAndCheckboxes() {

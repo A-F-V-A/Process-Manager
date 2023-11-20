@@ -6,14 +6,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
-import edu.est.process.manager.domain.util.Export;
 import edu.est.process.manager.domain.util.JsonFileUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import static edu.est.process.manager.domain.util.JsonFileUtil.saveJsonObjectToFile;
 
 public class ProcessManager {
     // Única instancia de ProcessManager
@@ -79,7 +82,7 @@ public class ProcessManager {
         JsonArray processArray = new JsonArray();
         for (CustomProcess process : processes.values()) processArray.add(process.toJson());
         fileSave.add("process",processArray);
-        JsonFileUtil.saveJsonObjectToFile(fileSave,"processManager.json");
+        saveJsonObjectToFile(fileSave,"processManager.json");
     }
     public void loadData(){
         JsonObject data = JsonFileUtil.readJsonFromFile("processManager.json");
@@ -142,51 +145,230 @@ public class ProcessManager {
     }
 
     public void saveDataExcel(String fileExcel) {
-        Export exporter = new Export();
-        try {
-            exporter.saveData(fileExcel); // Invocar el método de exportación desde la instancia de Export
-            getProcesses(fileExcel);
-            getActivities(fileExcel);
-            getTask(fileExcel);
+
+        JsonObject data = JsonFileUtil.readJsonFromFile("processManager.json");
+        if (data == null) return;;
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Process Data");
+        int rowNum = 0;
+
+        JsonArray processArray = data.getAsJsonArray("process");
+
+        for (int i = 0; i < processArray.size(); i++) {
+            JsonObject processObject = processArray.get(i).getAsJsonObject();
+            CustomProcess process = createProcess(processObject);
+
+            Row row = sheet.createRow(rowNum++);
+            writeProcessDataToRow(row, process);
+
+            JsonArray activityArray = processObject.getAsJsonArray("activities");
+            for (int j = 0; j < activityArray.size(); j++) {
+                JsonObject activityObject = activityArray.get(j).getAsJsonObject();
+                Activity activity = createActivity(activityObject);
+
+                Row activityRow = sheet.createRow(rowNum++);
+                writeActivitiesDataToRow(activityRow, activity);
+
+                JsonArray pendingTasksArray = activityObject.getAsJsonArray("pendingTasks");
+                for (int k = 0; k < pendingTasksArray.size(); k++) {
+                    JsonObject pendingTaskObject = pendingTasksArray.get(k).getAsJsonObject();
+                    Task pendingTask = createTask(pendingTaskObject);
+
+                    Row pendingTaskRow = sheet.createRow(rowNum++);
+                    writeTaskDataToRow(pendingTaskRow, pendingTask);
+                }
+
+                JsonArray completedTasksArray = activityObject.getAsJsonArray("completedTasks");
+                for (int k = 0; k < completedTasksArray.size(); k++) {
+                    JsonObject completedTaskObject = completedTasksArray.get(k).getAsJsonObject();
+                    Task completedTask = createTask(completedTaskObject);
+
+                    Row completedTaskRow = sheet.createRow(rowNum++);
+                    writeTaskDataToRow(completedTaskRow, completedTask);
+                }
+            }
+
+            fillActivityAndTasks(processObject, process, sheet, rowNum);
+        }
+
+        try(FileOutputStream fileOut = new FileOutputStream(fileExcel)) {
+            workbook.write(fileOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void fillActivityAndTasks(JsonObject processObject, CustomProcess process, Sheet sheet, int rowNum) {
+
+        JsonArray activityArray = processObject.getAsJsonArray("activities");
+
+        for (int i = 0; i < activityArray.size(); i++) {
+            Activity activity = createActivity(activityArray.get(i).getAsJsonObject());
+
+            fillTask(activityArray.get(i).getAsJsonObject(), activity);
+            process.addActivity(activity);
+
+            Row row = sheet.createRow(rowNum++);
+            // Escribir los datos de la actividad en la fila correspondiente
+            writeActivitiesDataToRow(row, activity);
+
+            // Aumentar rowNum para la siguiente fila si hay más actividades o tareas
+            rowNum = fillTasksIntoSheet(activity, sheet, rowNum);
+        }
+
+    }
+
+    private int fillTasksIntoSheet(Activity activity, Sheet sheet, int rowNum) {
+
+        List<Task> pendingTasks = (List<Task>) activity.getPendingTasks();
+        List<Task> completedTasks = (List<Task>) activity.getCompletedTasks();
+
+        for (Task task : pendingTasks) {
+            Row row = sheet.createRow(rowNum++);
+            // Escribir los datos de la tarea pendiente en la fila correspondiente
+            writeTaskDataToRow(row, task);
+        }
+
+        for (Task task : completedTasks) {
+            Row row = sheet.createRow(rowNum++);
+            // Escribir los datos de la tarea completada en la fila correspondiente
+            writeTaskDataToRow(row, task);
+        }
+
+        return rowNum;
+
+    }
+
+
+    private void writeTaskDataToRow(Row row, Task task) {
+        row.createCell(7).setCellValue(task.getId());
+        row.createCell(8).setCellValue(task.getStatus().ordinal());
+        row.createCell(9).setCellValue(task.getDescription());
+        row.createCell(10).setCellValue(task.getDurationMinutes());
+    }
+
+    private void writeActivitiesDataToRow(Row row, Activity activity) {
+        row.createCell(4).setCellValue(activity.getId());
+        row.createCell(5).setCellValue(activity.getName());
+        row.createCell(6).setCellValue(activity.getDescription());
+    }
+
+    private void writeProcessDataToRow(Row row, CustomProcess process) {
+        row.createCell(0).setCellValue(process.getId());
+        row.createCell(1).setCellValue(process.getName());
+        row.createCell(2).setCellValue(process.getDescription());
+        row.createCell(3).setCellValue(process.getTotalDurationMinutes());
+    }
+
+    public void  readDataFromExcelAndSaveAsJson(String excelFilePath, String jsonFilePath) {
+
+        Map<String, List<?>> dataFromExcel = readDataFromExcel(excelFilePath);
+        JsonObject jsonToSave = formatDataToJson(dataFromExcel);
+        saveJsonObjectToFile(jsonToSave, jsonFilePath);
+    }
+
+    private Map<String, List<?>> readDataFromExcel(String filePath) {
+        Map<String, List<?>> excelData = new HashMap<>();
+
+        try(FileInputStream fileInputStream = new FileInputStream(filePath)) {
+            Workbook workbook = new XSSFWorkbook(fileInputStream);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> colum1Data = new ArrayList<>();
+            List<String> colum2Data = new ArrayList<>();
+            List<String> colum3Data = new ArrayList<>();
+            List<String> colum4Data = new ArrayList<>();
+            List<String> colum5Data = new ArrayList<>();
+            List<String> colum6Data = new ArrayList<>();
+            List<String> colum7Data = new ArrayList<>();
+            List<String> colum8Data = new ArrayList<>();
+            List<String> colum9Data = new ArrayList<>();
+            List<String> colum10Data = new ArrayList<>();
+            List<String> colum11Data = new ArrayList<>();
+            List<String> colum12Data = new ArrayList<>();
+
+
+
+            for (Row row : sheet) {
+
+                colum1Data.add(row.getCell(0).getStringCellValue());
+                colum2Data.add(row.getCell(1).getStringCellValue());
+                colum3Data.add(row.getCell(2).getStringCellValue());
+                colum4Data.add(row.getCell(3).getStringCellValue());
+                colum5Data.add(row.getCell(4).getStringCellValue());
+                colum6Data.add(row.getCell(5).getStringCellValue());
+                colum7Data.add(row.getCell(6).getStringCellValue());
+                colum8Data.add(row.getCell(7).getStringCellValue());
+                colum9Data.add(row.getCell(8).getStringCellValue());
+                colum10Data.add(row.getCell(9).getStringCellValue());
+                colum11Data.add(row.getCell(10).getStringCellValue());
+                colum12Data.add(row.getCell(11).getStringCellValue());
+            }
+
+            excelData.put("column1", colum1Data);
+            excelData.put("column2", colum2Data);
+            excelData.put("column3", colum3Data);
+            excelData.put("column4", colum4Data);
+            excelData.put("column5", colum5Data);
+            excelData.put("column6", colum6Data);
+            excelData.put("column7", colum7Data);
+            excelData.put("column8", colum8Data);
+            excelData.put("column9", colum9Data);
+            excelData.put("column10", colum10Data);
+            excelData.put("column11", colum11Data);
+
+            workbook.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return excelData;
     }
-    public void loadDataExcel(String filePath) {
-        Export export = new Export();
-        try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
-            Workbook workbook = new XSSFWorkbook(fileInputStream);
-            Sheet sheet = workbook.getSheetAt(0);
 
-            List<String[]> importedData = export.importFromExcel(filePath);
+    private JsonObject formatDataToJson(Map<String, List<?>> dataFromExcel) {
+        JsonObject json = new JsonObject();
 
-            for (String[] rowData : importedData){
-                for (String cellData : rowData) {
-                    System.out.println(cellData + "\t");
-                }
-                System.out.println();
-            }
+        // Crear un array JSON para almacenar los datos
+        JsonArray jsonArray = new JsonArray();
 
-            for (Row row : sheet) {
-                if (row.getRowNum() == 0) {
-                    continue; // Saltar la primera fila con los encabezados
-                }
-            }
+        // Obtener las listas de datos del mapa y recorrerlas para convertirlas en JSON
+        List<String> column1Data = (List<String>) dataFromExcel.get("column1");
+        List<String> column2Data = (List<String>) dataFromExcel.get("column2");
+        // ... obtener más listas si es necesario
 
-            loadCustomProcess(filePath);
+        // Asumiendo que las listas tienen la misma longitud
+        int rows = column1Data.size();
+        for (int i = 0; i < rows; i++) {
+            JsonObject jsonObject = new JsonObject();
+            // Agregar datos al objeto JSON
+            jsonObject.addProperty("column1", column1Data.get(i));
+            jsonObject.addProperty("column2", column2Data.get(i));
+            // ... agregar más propiedades si es necesario
 
-            // Cargar actividades
-            loadActivities(filePath);
+            // Agregar cada objeto JSON al array JSON
+            jsonArray.add(jsonObject);
+        }
 
-            // Cargar tareas
-            loadTasks(filePath);
+        // Agregar el array JSON al objeto JSON principal
+        json.add("data", jsonArray);
 
-            ProcessManager  processManager = ProcessManager.getInstance();
-            for (CustomProcess process : processes.values()) {
-                processManager.addProcess(process);
-            }
+        return json;
+    }
 
-            workbook.close();
+    private void saveJsonObjectToFile(JsonObject jsonObject, String filePath) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
+            Gson gson = new Gson();
+            // Convertir el JsonObject a una cadena JSON y escribirlo en el archivo
+            String jsonString = gson.toJson(jsonObject);
+            fileOutputStream.write(jsonString.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

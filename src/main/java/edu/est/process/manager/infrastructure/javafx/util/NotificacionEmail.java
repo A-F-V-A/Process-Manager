@@ -22,12 +22,10 @@ public class NotificacionEmail {
      *
      * @param emailAddress Dirección de correo electrónico a la que se enviará la notificación.
      * @param message      Mensaje de la notificación por correo electrónico.
-     * @param task         Tarea asociada a la notificación.
      */
-    public NotificacionEmail(String emailAddress, String message, Task task) {
+    public NotificacionEmail(String emailAddress, String message) {
         this.emailAddress = emailAddress;
-        this.message = message;
-        this.task = task;
+        this.message = "";
         this.active = true;
     }
 
