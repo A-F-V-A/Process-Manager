@@ -17,8 +17,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import org.apache.poi.ss.formula.functions.T;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,7 @@ public class LibraryController implements Initializable {
 
 
     private ProcessManager manager;
+    private File file;
     @FXML
     public AnchorPane p_container;
     @FXML
@@ -73,7 +74,7 @@ public class LibraryController implements Initializable {
         Node source = (Node) event.getSource();
         navActive(source.getId());
         clear();
-        ExportImport();
+        ExportImport(file);
     }
 
     //Se presenta un problema el cual los vBoxTaskPending y vBoxTaskCompleted entran como nulos
@@ -228,10 +229,10 @@ public class LibraryController implements Initializable {
         component.setLayoutX(xPosition);
         component.setLayoutY(yPosition);
     }
-    public void ExportImport() {
+    public void ExportImport(File file) {
         VBox container = new VBox(10);
-        CExportImport exportImport = new CExportImport();
-        VBox component = exportImport.render();
+        CExportImport exportImport = new CExportImport(manager);
+        VBox component = exportImport.render(file);
         p_container.getChildren().add(component);
 
         double xPosition = (p_container.getWidth() - 300.0) / 2;
