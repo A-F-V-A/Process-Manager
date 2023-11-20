@@ -124,7 +124,7 @@ public class CActivity {
 
         for (Task task : activity.getCompletedTasksAsList()) {
             CTask cTask = new CTask(manager, activity, task, process.getId());
-            completedTasksContainer.getChildren().add(cTask.render());
+            completedTasksContainer.getChildren().add(cTask.renderCompleted());
         }
 
         ScrollPane completedScrollPane = new ScrollPane(completedTasksContainer);

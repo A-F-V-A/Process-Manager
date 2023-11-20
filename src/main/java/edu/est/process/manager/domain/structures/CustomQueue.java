@@ -110,6 +110,21 @@ public class CustomQueue<E> {
         return head.element;
     }
 
+    public void updateElement(E oldElement, E newElement) {
+        if (isEmpty() || oldElement == null || newElement == null) {
+            return;
+        }
+
+        Node<E> current = head;
+        while (current != null) {
+            if (current.element.equals(oldElement)) {
+                current.element = newElement;
+                return;
+            }
+            current = current.next;
+        }
+    }
+
     /**
      * Converts the queue into a {@link List}.
      * This method traverses the queue from head to tail and adds each element

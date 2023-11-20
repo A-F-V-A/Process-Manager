@@ -44,6 +44,17 @@ public class Activity  {
         return completedTask;
     }
 
+    public Task completeTask(Task task) {
+        pendingTasks.remove(task);
+        task.setStatus(TaskStatus.COMPLETED);
+        addCompletedTasks(task);
+        return task;
+    }
+
+    public void UpdateTask(Task current, Task newTask){
+        pendingTasks.updateElement(current,newTask);
+    }
+
     public void addCompletedTasks(Task task) {
         completedTasks.enqueue(task);
     }
