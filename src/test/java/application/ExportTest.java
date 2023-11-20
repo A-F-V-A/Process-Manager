@@ -1,5 +1,6 @@
 package application;
 
+import com.github.javafaker.Faker;
 import edu.est.process.manager.domain.util.Export;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -65,6 +66,56 @@ public class ExportTest {
         for (String[] rowData : loadedData) {
             assertEquals(expectedColumns, rowData.length);
         }
+    }
+
+    @Test
+    public void testLoadDataForExcel2() {
+        Export exportImport = new Export();
+
+        List<String[]> excelData = new ArrayList<>();
+
+        // Generamos datos aleatorios con Faker
+        Faker faker = new Faker();
+        int numOfProcesses = 3; // Número de procesos aleatorios
+
+        for (int i = 0; i < numOfProcesses; i++) {
+            String processName = faker.company().name();
+            String processDescription = faker.lorem().sentence();
+
+            // Agregamos datos del proceso al excelData
+            excelData.add(new String[]{processName, "ProcessID_" + i, processDescription, String.valueOf(faker.number().numberBetween(100, 1000))});
+
+            // Generamos actividades aleatorias para cada proceso
+            int numOfActivities = faker.number().numberBetween(2, 5); // Número de actividades aleatorias por proceso
+
+            for (int j = 0; j < numOfActivities; j++) {
+                String activityName = faker.book().title();
+                String activityDescription = faker.lorem().sentence();
+
+                // Agregamos datos de la actividad al excelData
+                excelData.add(new String[]{processName, "ActivityID_" + i + "_" + j, activityDescription});
+
+                // Generamos tareas aleatorias para cada actividad
+                int numOfTasks = faker.number().numberBetween(1, 4); // Número de tareas aleatorias por actividad
+
+                for (int k = 0; k < numOfTasks; k++) {
+                    String taskDescription = String.valueOf(faker.lorem().words());
+                    String taskStatus = "COMPLETED"; // Podrías generar aleatoriamente estados
+                    String taskDuration = String.valueOf(faker.number().numberBetween(5, 120)); // Duración aleatoria en minutos
+
+                    // Agregamos datos de la tarea al excelData
+                    excelData.add(new String[]{processName, "ActivityID_" + i + "_" + j, activityDescription, taskDescription, taskStatus, taskDuration});
+                }
+            }
+        }
+
+        // Realizamos la prueba
+        exportImport.loadDataForExcel();
+        List<String[]> testData = exportImport.loadDataForExcel();
+
+        assertNotNull(testData); // Verificamos que los datos no sean nulos
+        assertEquals(excelData.size(), testData.size()); // Comparamos la cantidad de datos
+        // Aquí podrías realizar más aserciones para validar la estructura y contenido de los datos
     }
 
     @Test

@@ -1,16 +1,16 @@
 package edu.est.process.manager.domain.util;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import edu.est.process.manager.domain.models.*;
+import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
+import edu.est.process.manager.domain.structures.CustomQueue;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -19,133 +19,111 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class Export {
 
-    /**
-     * Exporta los datos a un archivo Excel en el path especificado.
-     *
-     * @param filePath Ruta donde se guardará el archivo Excel.
-     * @throws IOException Si ocurre un error durante la escritura del archivo.
-     */
-    public static void exportToExcel(String filePath) throws IOException {
-        Export export = new Export();
-        List<String[]> data = export.loadDataForExcel();
+    private Map<String, CustomProcess> processes;
 
-        try (Workbook workbook = WorkbookFactory.create(true);
-             FileOutputStream fileOut = new FileOutputStream(filePath)) {
 
-            Sheet sheet = workbook.createSheet("Datos");
+    public void saveData(String fileExcel) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Process Data");
 
-            // Encabezados de las columnas
-            String[] headers = {
-                    "nombre proceso", "idProceso", "DescripcionProceso", "duracionProceso",
-                    "idActividades", "nombre actividad", "actividad", "nombreDescripcion",
-                    "idTarea", "descripcion", "estado", "duracion"
-            };
-            Row headerRow = sheet.createRow(0);
-            for (int i = 0; i < headers.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(headers[i]);
-            }
+        Map<String, Integer> headersMap = columnHeaders(); // Obtenemos los encabezados
+        crearBaseExcel(workbook, sheet, headersMap); // Creamos la estructura del Excel
 
-            int rowNum = 1;
-            for (String[] rowData : data) {
-                Row row = sheet.createRow(rowNum++);
-                int colNum = 0;
-                for (String cellData : rowData) {
-                    Cell cell = row.createCell(colNum++);
-                    cell.setCellValue(cellData);
-                }
-            }
-
-            workbook.write(fileOut);
-        }
-    }
-
-    /**
-     * Carga los datos para su exportación a un archivo Excel.
-     *
-     * @return Lista de arrays de strings que representan los datos a exportar.
-     */
-    public List<String[]> loadDataForExcel() {
-        List<String[]> excelData = new ArrayList<>();
-
-        ProcessManager processManager = ProcessManager.getInstance();
-        Map<String, CustomProcess> processes = processManager.getProcesses();
+        int rowNum = 1; // Comenzamos desde la segunda fila para agregar datos
 
         for (CustomProcess process : processes.values()) {
-            excelData.add(getProcessInfo(process)); // Datos del proceso
+            Row row = sheet.createRow(rowNum++);
+            int colNum = 0;
 
-            // Datos de las actividades
-            for (Activity activity : process.getActivities().toList()) {
-                excelData.add(getActivityInfo(process, activity)); // Datos de la actividad
-                excelData.addAll(getPendingTaskInfo(process, activity)); // Datos de tareas pendientes
-                excelData.addAll(getCompletedTaskInfo(process, activity)); // Datos de tareas completadas
+            // Datos del proceso
+            row.createCell(colNum++).setCellValue(process.getName());
+            row.createCell(colNum++).setCellValue(process.getId());
+            row.createCell(colNum++).setCellValue(process.getDescription());
+            row.createCell(colNum++).setCellValue(process.getTotalDurationMinutes());
+
+            // Datos de actividades
+            CustomDoublyLinkedList<Activity> activitiesList = process.getActivities();
+            int size = activitiesList.size();
+
+            for (int i = 0; i < size; i++) {
+                Activity activity = activitiesList.get(i);
+                Row activityRow = sheet.createRow(rowNum++);
+                int activityColNum = 1; // Para omitir la primera columna si es necesario
+
+                activityRow.createCell(activityColNum++).setCellValue(activity.getId());
+                activityRow.createCell(activityColNum++).setCellValue(activity.getName());
+                activityRow.createCell(activityColNum++).setCellValue(activity.getDescription());
+
+                // Datos de tareas pendientes
+                CustomQueue<Task> pendingTasksList = activity.getPendingTasks();
+                int size2 = pendingTasksList.size();
+
+                for (int j = 0; j < size2; j++) {
+                    Task task = pendingTasksList.get(j);
+                    Row taskRow = sheet.createRow(rowNum++);
+                    int taskColNum = 2; // Para omitir las primeras dos columnas si es necesario
+
+                    taskRow.createCell(taskColNum++).setCellValue(task.getId());
+                    taskRow.createCell(taskColNum++).setCellValue(task.getDescription());
+                    taskRow.createCell(taskColNum++).setCellValue(task.getStatus().ordinal());
+                    taskRow.createCell(taskColNum++).setCellValue(task.getDurationMinutes());
+                }
+
+                // Datos de tareas completadas
+                CustomQueue<Task> completedTasksList = activity.getCompletedTasks();
+                int size3 = completedTasksList.size();
+
+                for (int j = 0; j < size3; j++) {
+                    Task task = completedTasksList.get(j);
+                    Row taskRow = sheet.createRow(rowNum++);
+                    int taskColNum = 2; // Para omitir las primeras dos columnas si es necesario
+
+                    taskRow.createCell(taskColNum++).setCellValue(task.getId());
+                    taskRow.createCell(taskColNum++).setCellValue(task.getDescription());
+                    taskRow.createCell(taskColNum++).setCellValue(task.getStatus().ordinal());
+                    taskRow.createCell(taskColNum++).setCellValue(task.getDurationMinutes());
+                }
             }
         }
 
-        return excelData;
+        FileOutputStream fileOut = new FileOutputStream(fileExcel);
+        workbook.write(fileOut);
+        fileOut.close();
+        workbook.close();
     }
 
-    private String[] getProcessInfo(CustomProcess process) {
-        return new String[]{
-                process.getName(),
-                process.getId(),
-                process.getDescription(),
-                String.valueOf(process.getTotalDurationMinutes())
-        };
+    public Map<String, Integer> columnHeaders() {
+        Map<String, Integer> columnHeaders = new HashMap<>();
+        columnHeaders.put("nombre proceso", 0);
+        columnHeaders.put("idProceso", 1);
+        columnHeaders.put("DescripcionProceso", 2);
+        columnHeaders.put("duracionProceso", 3);
+        columnHeaders.put("idActividades", 4);
+        columnHeaders.put("nombre actividad", 5);
+        columnHeaders.put("nombreDescripcion", 6);
+        columnHeaders.put("idTarea", 7);
+        columnHeaders.put("descripcion", 8);
+        columnHeaders.put("estado", 9);
+        columnHeaders.put("duracion", 10);
+
+        return columnHeaders;
     }
 
-    private String[] getActivityInfo(CustomProcess process, Activity activity) {
-        return new String[]{
-                process.getName(), // Nombre del proceso al que pertenece la actividad
-                activity.getId(),
-                activity.getDescription(),
-        };
-    }
-
-    private List<String[]> getPendingTaskInfo(CustomProcess process, Activity activity) {
-        List<String[]> pendingTasksInfo = new ArrayList<>();
-        for (Task task : activity.getPendingTasksAsList()) {
-            String[] pendingTaskInfo = {
-                    process.getName(), // Nombre del proceso al que pertenece la tarea
-                    activity.getId(), // ID de la actividad a la que pertenece la tarea
-                    activity.getDescription(),
-                    task.getDescription(),
-                    String.valueOf(task.getStatus()),
-                    String.valueOf(task.getDurationMinutes())
-            };
-            pendingTasksInfo.add(pendingTaskInfo);
+    public void crearBaseExcel(Workbook workbook, Sheet sheet, Map<String, Integer> columnHeaders) {
+        Row row = sheet.createRow(0);
+        for (String columnHeader : columnHeaders.keySet()) {
+            Cell cell = row.createCell(columnHeaders.get(columnHeader));
+            cell.setCellValue(columnHeader);
         }
-        return pendingTasksInfo;
     }
 
-    private List<String[]> getCompletedTaskInfo(CustomProcess process, Activity activity) {
-        List<String[]> completedTasksInfo = new ArrayList<>();
-        for (Task task : activity.getCompletedTasksAsList()) {
-            String[] completedTaskInfo = {
-                    process.getName(), // Nombre del proceso al que pertenece la tarea
-                    activity.getId(), // ID de la actividad a la que pertenece la tarea
-                    task.getDescription(),
-                    String.valueOf(task.getStatus()),
-                    String.valueOf(task.getDurationMinutes())
-            };
-            completedTasksInfo.add(completedTaskInfo);
-        }
-        return completedTasksInfo;
-    }
 
-    /**
-     * Importa datos desde un archivo Excel en el path especificado.
-     *
-     * @param filePath Ruta del archivo Excel desde donde se importarán los datos.
-     * @return Lista de arrays de strings que representan los datos importados.
-     * @throws IOException Si ocurre un error durante la lectura del archivo.
-     */
     public List<String[]> importFromExcel(String filePath) throws IOException {
-
         if (!validateExcelFile(filePath)) {
-            System.err.println("El archivo no cumple con los criterios, puedes revisar si cuenta con todas las columnas");
-            return new ArrayList<>(); // O puedes lanzar una excepción, dependiendo de la lógica de tu aplicación
+            System.err.println("El archivo no cumple con los criterios requeridos.");
+            return new ArrayList<>(); // O puedes manejarlo según la lógica de tu aplicación
         }
+
         List<String[]> importedData = new ArrayList<>();
 
         try (FileInputStream fileInputStream = new FileInputStream(filePath);
@@ -182,12 +160,6 @@ public class Export {
         return importedData;
     }
 
-    /**
-     * Valida si el archivo Excel cumple con los criterios requeridos.
-     *
-     * @param filePath Ruta del archivo Excel a validar.
-     * @return true si el archivo cumple con los criterios, false de lo contrario.
-     */
     public boolean validateExcelFile(String filePath) {
         try (FileInputStream fileInputStream = new FileInputStream(filePath);
              Workbook workbook = new XSSFWorkbook(fileInputStream)) {
@@ -201,7 +173,7 @@ public class Export {
 
             String[] expectedHeaders = {
                     "nombre proceso", "idProceso", "DescripcionProceso", "duracionProceso",
-                    "idActividades", "nombre actividad", "actividad", "nombreDescripcion",
+                    "idActividades", "nombre actividad", "nombreDescripcion",
                     "idTarea", "descripcion", "estado", "duracion"
             };
 

@@ -216,6 +216,18 @@ public class CustomDoublyLinkedList<E> {
         }
     }
 
+    public E get(int i) {
+        if (i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException("Index: " + i + ", Size: " + size);
+        }
+
+        Node<E> current = head.next;
+        for (int index = 0; index < i; index++) {
+            current = current.next;
+        }
+        return current.element;
+    }
+
     public void moveNodeForward(E element) {
         if (head.next == tail || head.next.next == tail) {
             // La lista está vacía o solo tiene un elemento.

@@ -17,6 +17,8 @@ public class CustomQueue<E> {
     private Node<E> tail; // Reference to the end of the queue
     private int size;     // Number of elements in the queue
 
+
+
     /**
      * Static inner class representing a node in the queue.
      */
@@ -130,6 +132,18 @@ public class CustomQueue<E> {
         }
 
         return list;
+    }
+
+    public E get(int i) {
+        if (i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException("Index: " + i + ", Size: " + size);
+        }
+
+        Node<E> current = head.next;
+        for (int index = 0; index < i; index++) {
+            current = current.next;
+        }
+        return current.element;
     }
 }
 

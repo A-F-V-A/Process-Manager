@@ -77,6 +77,11 @@
             <version>5.10.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version> <!-- Reemplaza con la última versión disponible -->
+        </dependency>
     </dependencies>
     <build>
         <plugins>
