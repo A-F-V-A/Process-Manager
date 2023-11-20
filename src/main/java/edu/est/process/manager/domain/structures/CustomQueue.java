@@ -1,7 +1,6 @@
 package edu.est.process.manager.domain.structures;
 
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,6 +129,40 @@ public class CustomQueue<E> {
         }
 
         return list;
+    }
+    public void remove(E element) {
+        // Manejar casos especiales: cola vacía o elemento en la cabeza
+        if (isEmpty() || element == null) {
+            return;
+        }
+
+        if (head.element.equals(element)) {
+            dequeue(); // Reutiliza el método dequeue si el elemento está en la cabeza
+            return;
+        }
+
+        // Buscar el elemento y mantener referencia al nodo anterior
+        Node<E> current = head;
+        Node<E> prev = null;
+        while (current != null && !current.element.equals(element)) {
+            prev = current;
+            current = current.next;
+        }
+
+        // Si el elemento no se encuentra en la cola
+        if (current == null) {
+            return;
+        }
+
+        // Remover el nodo del enlace
+        prev.next = current.next;
+
+        // Si el elemento a remover es el último, actualizar la cola
+        if (current == tail) {
+            tail = prev;
+        }
+
+        size--;
     }
 }
 

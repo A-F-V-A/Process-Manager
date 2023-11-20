@@ -3,8 +3,9 @@ package edu.est.process.manager.domain.models;
 
 import com.google.gson.JsonObject;
 import edu.est.process.manager.domain.util.IDGenerator;
+import edu.est.process.manager.infrastructure.javafx.util.Notification;
 
-import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Represents a task within a process or activity.
@@ -107,6 +108,10 @@ public class Task {
         this.id = id;
     }
 
+    public int getDuration() {
+        return durationMinutes;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -115,6 +120,19 @@ public class Task {
                 ", durationMinutes=" + durationMinutes +
                 ", notification= " + notification +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(getId(), task.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
 

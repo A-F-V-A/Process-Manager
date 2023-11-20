@@ -20,10 +20,12 @@ public class CTask {
     private final ProcessManager manager;
     private final Activity activity;
     private Task task;
-    public CTask (ProcessManager manager,Activity activity,Task task){
+    private String idProcess;
+    public CTask (ProcessManager manager,Activity activity,Task task,String id){
         this.manager = manager;
         this.activity = activity;
         this.task = task;
+        this.idProcess = id;
     }
 
     public VBox render() {
@@ -40,28 +42,53 @@ public class CTask {
         Label statusLabel = new Label(task.getStatus().toString());
         statusLabel.getStyleClass().add("task-status");
 
+        Text Time = new Text(formatTime(task.getDuration()));
+        Time.getStyleClass().add("time-text");
+
         // Botones de Acción
         HBox actionButtons = new HBox(10);
-        Button completeButton = new Button("Complete");
-        Button editButton = new Button("Edit");
-        Button deleteButton = new Button("Delete");
-        completeButton.getStyleClass().add("task-button");
-        editButton.getStyleClass().addAll("task-button", "task-button-edit");
-        deleteButton.getStyleClass().addAll("task-button", "task-button-delete");
-        // Agregar estilos y eventos a los botones aquí
-        actionButtons.getChildren().addAll(completeButton, editButton, deleteButton);
 
-        taskCard.getChildren().addAll(titleLabel, statusLabel, actionButtons);
+        Button runButton = new Button("run ➤");
+        runButton.getStyleClass().add("task-button");
+
+        Button completeButton = new Button("Complete ✅");
+        completeButton.getStyleClass().addAll("task-button","task-button-run");
+
+        Button editButton = new Button("Edit ✎");
+        editButton.getStyleClass().addAll("task-button", "task-button-edit");
+
+        Button noticationButtion = new Button("Notify \uD83D\uDD14");
+        noticationButtion.getStyleClass().addAll("task-button","task-button-notify");
+
+        Button deleteButton = new Button("Delete 🗑");
+        deleteButton.getStyleClass().addAll("task-button", "task-button-delete");
+        deleteButton.setOnAction(event -> handleCloseAction(taskCard));
+
+
+        actionButtons.getChildren().addAll(runButton,completeButton, editButton,noticationButtion, deleteButton);
+        taskCard.getChildren().addAll(titleLabel, statusLabel,Time, actionButtons);
 
         return taskCard;
     }
 
     private void handleCloseAction(VBox card) {
         if (card.getParent() != null) {
-           //  CustomDoublyLinkedList<Activity> activities = process.getActivities();
-          //  activities.removeIf(at -> at.equals(activity));
+            activity.getPendingTasks().remove(task);
+            CustomProcess process = manager.getProcess(idProcess);
+            process.updateTotalDuration();
             ((Pane) card.getParent()).getChildren().remove(card);
-           // manager.saveData();
+            manager.saveData();
         }
+    }
+
+    public void setIdProcess(String idProcess) {
+        this.idProcess = idProcess;
+    }
+
+    private String formatTime(int time) {
+        int hours = time / 60;
+        int minutes = time % 60;
+
+        return String.format("%d:%02d", hours, minutes);
     }
 }

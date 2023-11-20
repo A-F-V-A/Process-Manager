@@ -82,9 +82,9 @@ public class Activity  {
      */
     public int getTotalDurationMinutes() {
         int totalDuration = 0;
-        for (Task task : pendingTasks.toList()) totalDuration += task.getDurationMinutes();
+        for (Task task : pendingTasks.toList()) totalDuration += task.getDuration();
 
-        for (Task task : completedTasks.toList()) totalDuration += task.getDurationMinutes();
+        for (Task task : completedTasks.toList()) totalDuration += task.getDuration();
 
         return totalDuration;
     }

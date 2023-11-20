@@ -26,5 +26,7 @@ module edu.est.library {
 
     opens  edu.est.process.manager.domain.structures to javafx.fmxl;
     exports edu.est.process.manager.domain.structures;
+    exports edu.est.process.manager.infrastructure.javafx.util;
+    opens edu.est.process.manager.infrastructure.javafx.util to javafx.fmxl;
 
 }

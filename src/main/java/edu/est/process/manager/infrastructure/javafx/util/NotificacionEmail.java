@@ -1,5 +1,7 @@
-package edu.est.process.manager.domain.models;
+package edu.est.process.manager.infrastructure.javafx.util;
 
+import edu.est.process.manager.domain.models.Task;
+import edu.est.process.manager.domain.models.TaskStatus;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;

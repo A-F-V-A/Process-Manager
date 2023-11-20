@@ -60,7 +60,7 @@ public class CustomProcess {
         this.totalDurationMinutes += totalDurationMinutes;
     }
 
-    private void updateTotalDuration() {
+    public void updateTotalDuration() {
         this.totalDurationMinutes = 0;
         activities.forEach(duration ->
                         updateTotalDuration(duration.getTotalDurationMinutes())

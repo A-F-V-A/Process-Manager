@@ -248,11 +248,30 @@
     -fx-padding: 5px 10px;
     -fx-border-radius: 4px;
     -fx-background-radius: 4px;
+    -fx-cursor: hand;
 }
 
 .task-button:hover {
     -fx-background-color: #4cae4c;
 }
+
+
+
+.task-button-notify {
+    -fx-background-color: #f66b4e;
+}
+.task-button-notify:hover {
+    -fx-background-color: #f66243;
+}
+
+.task-button-run{
+    -fx-background-color: #3523e3;
+}
+.task-button-run:hover {
+    -fx-background-color: #3c2cd2;
+}
+
+
 
 /* Estilo para el botón de edición */
 .task-button-edit {

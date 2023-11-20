@@ -1,4 +1,7 @@
-package edu.est.process.manager.domain.models;
+package edu.est.process.manager.infrastructure.javafx.util;
+
+import edu.est.process.manager.domain.models.Task;
+import edu.est.process.manager.domain.models.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.Iterator;
