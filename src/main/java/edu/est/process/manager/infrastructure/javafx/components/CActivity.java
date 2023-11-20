@@ -2,7 +2,6 @@ package edu.est.process.manager.infrastructure.javafx.components;
 
 import edu.est.process.manager.domain.models.*;
 import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
-import edu.est.process.manager.infrastructure.javafx.util.NodeExplorer;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,8 +12,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
-import java.util.List;
 
 public class CActivity {
     private final ProcessManager manager;

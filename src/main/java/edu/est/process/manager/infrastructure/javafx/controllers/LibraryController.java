@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -63,6 +64,7 @@ public class LibraryController implements Initializable {
         navActive(source.getId());
         clear();
         Notification();
+        CAlert.Alert(Alert.AlertType.WARNING,"Alerta Tiempo","Hola Soy una alerta","Cierrame");
     }
 
     @FXML
@@ -75,7 +77,7 @@ public class LibraryController implements Initializable {
 
     private void onSearchTextChanged(String newText) {
         List<Node> nodeFilter = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("activity-filter"));
-
+        //  List<Node> nodeFilter = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("task-view"));
         if (nodeFilter.size() == 1 && nodeFilter.get(0) instanceof VBox) {
             VBox vBoxNode = (VBox) nodeFilter.get(0);
             CustomProcess process = manager.getProcess(vBoxNode.getId());
@@ -91,7 +93,13 @@ public class LibraryController implements Initializable {
                 }
             }
 
-        } else {
+        } //else if(){
+            //  List<Node> nodeFilter = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("pending-tasks-container"));
+
+           // if (nodeFilter.size() == 1 && nodeFilter.get(0) instanceof VBox) {
+            //  List<Node> nodeFilter = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("completed-tasks-container"));
+        //}
+        else {
             System.out.println("No se encontró exactamente un VBox con la clase 'activity-filter'");
         }
 

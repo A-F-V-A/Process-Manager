@@ -54,6 +54,7 @@ public class CTask {
 
         Button runButton = new Button("run ➤");
         runButton.getStyleClass().add("task-button");
+        //runButton.setOnAction(event -> handleNotifyAction(taskCard));
 
         Button completeButton = new Button("Complete ✅");
         completeButton.getStyleClass().addAll("task-button","task-button-run");
@@ -64,6 +65,7 @@ public class CTask {
 
         Button noticationButtion = new Button("Notify \uD83D\uDD14");
         noticationButtion.getStyleClass().addAll("task-button","task-button-notify");
+        noticationButtion.setOnAction(event -> handleNotifyAction(taskCard));
 
         Button deleteButton = new Button("Delete 🗑");
         deleteButton.getStyleClass().addAll("task-button", "task-button-delete");
@@ -107,6 +109,10 @@ public class CTask {
         return taskCard;
     }
 
+    private void handleNotifyAction(VBox card){
+        /*Logica para las notificaciones */
+        System.out.println(task.toString());
+    }
     private void handleCloseAction(VBox card) {
         if (card.getParent() != null) {
             activity.getPendingTasks().remove(task);
@@ -134,7 +140,8 @@ public class CTask {
                 VBox completed = (VBox) complete.get(0);
                 completed.getChildren().add(completeTask.renderCompleted());
             }
-            ((Pane) card.getParent()).getChildren().remove(card);
+           // ((Pane) card.getParent()).getChildren().remove(card);
+            handleCloseAction(card);
             manager.saveData();
         }
     }
