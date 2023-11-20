@@ -3,6 +3,7 @@ package edu.est.process.manager.infrastructure.javafx.components;
 import edu.est.process.manager.domain.models.Activity;
 import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
+import edu.est.process.manager.domain.models.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -76,15 +77,47 @@ public class CExportImport {
 
         int rowNum = 0;
         Row headerRow = sheet.createRow(rowNum++);
-        headerRow.createCell(0).setCellValue("Nombre del Proceso");
-        headerRow.createCell(1).setCellValue("Descripción");
-        // Añade más columnas según la información que desees exportar
+        headerRow.createCell(0).setCellValue("ID del Proceso");
+        headerRow.createCell(1).setCellValue("Nombre del Proceso");
+        headerRow.createCell(2).setCellValue("Descripción");
+        headerRow.createCell(3).setCellValue("ID de Actividad");
+        headerRow.createCell(4).setCellValue("Nombre de Actividad");
+        headerRow.createCell(5).setCellValue("Descripción");
+        headerRow.createCell(6).setCellValue("ID de Tarea");
+        headerRow.createCell(7).setCellValue("Estado de a Tarea");
+        headerRow.createCell(8).setCellValue("Descripción");
+        headerRow.createCell(9).setCellValue("Duración en minutos");
 
         for (CustomProcess process : processManager.getProcesses().values()) {
+
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(process.getName());
-            row.createCell(1).setCellValue(process.getDescription());
-            // Añade más celdas con la información de cada proceso que quieras exportar
+            row.createCell(0).setCellValue(process.getId());
+            row.createCell(1).setCellValue(process.getName());
+            row.createCell(2).setCellValue(process.getDescription());
+
+            for (Activity activity : process.getActivities().toList()) {
+
+                row.createCell(3).setCellValue(activity.getId());
+                row.createCell(4).setCellValue(activity.getName());
+                row.createCell(5).setCellValue(activity.getDescription());
+
+                for (Task task : activity.getPendingTasks().toList()) {
+
+                    row.createCell(6).setCellValue(task.getId());
+                    row.createCell(7).setCellValue(task.getStatus().ordinal());
+                    row.createCell(8).setCellValue(task.getDescription());
+                    row.createCell(9).setCellValue(task.getDurationMinutes());
+                }
+
+                for (Task task : activity.getCompletedTasks().toList()) {
+
+                    row.createCell(6).setCellValue(task.getId());
+                    row.createCell(7).setCellValue(task.getStatus().ordinal());
+                    row.createCell(8).setCellValue(task.getDescription());
+                    row.createCell(9).setCellValue(task.getDurationMinutes());
+
+                }
+            }
         }
 
         try {
