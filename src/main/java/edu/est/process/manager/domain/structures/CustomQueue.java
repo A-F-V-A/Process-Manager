@@ -3,6 +3,7 @@ package edu.est.process.manager.domain.structures;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Custom implementation of a queue data structure (FIFO - First In, First Out).
@@ -194,6 +195,26 @@ public class CustomQueue<E> {
 
         size--;
 
+    }
+
+    /**
+     * Filtra los elementos de la cola según el predicado dado.
+     *
+     * @param predicate El predicado que define la condición que deben cumplir los elementos.
+     * @return Una lista de elementos que cumplen con la condición.
+     */
+    public List<E> filter(Predicate<E> predicate) {
+        List<E> filteredList = new ArrayList<>();
+        Node<E> current = head;
+
+        while (current != null) {
+            if (predicate.test(current.element)) {
+                filteredList.add(current.element);
+            }
+            current = current.next;
+        }
+
+        return filteredList;
     }
 }
 
