@@ -169,6 +169,7 @@ public class CModal {
 
                 process.addActivity(activity);
                 CActivity renderActivity = new CActivity(process,activity,manager);
+                renderActivity.setContainer(containerActivity);
                 containerActivity.getChildren().add(renderActivity.render());
             }
         }else{
@@ -195,7 +196,8 @@ public class CModal {
         List<Node> nodeFilter = NodeExplorer.findNodes(modal.getParent(), node -> node.getStyleClass().contains("task-view"));
         if (nodeFilter.size() == 1 && nodeFilter.get(0) instanceof VBox) {
             VBox vBoxNode = (VBox) nodeFilter.get(0);
-            Activity activity =  process.getActivities().findFirst(act -> act.getId().equals(vBoxNode.getId()));
+            String idActivity = vBoxNode.getId().split("\\|")[1];
+            Activity activity =  process.getActivities().findFirst(act -> act.getId().equals(idActivity));
             TaskStatus stateValue = TaskStatus.valueOf(state.toUpperCase());
             Task task = new Task(description,stateValue,Integer.parseInt(time.replaceAll(",","")));
             activity.addTask(task);

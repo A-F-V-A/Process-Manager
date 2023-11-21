@@ -161,6 +161,7 @@ public class LibraryController implements Initializable {
             boolean viewActivity =  container.getStyleClass().contains("Activity");
             List<Node> nodeFilter = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("task-view"));
 
+            System.out.println(container);
             VBox modal;
             if (nodeFilter.size() == 1)
                 modal = createProcess.render();
