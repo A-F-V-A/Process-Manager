@@ -8,6 +8,9 @@ import com.google.gson.JsonArray;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Clase que representa una actividad en el sistema.
+ */
 public class Activity  {
     private String id;
     private String name;
@@ -15,15 +18,30 @@ public class Activity  {
     private CustomQueue<Task> pendingTasks;
     private CustomQueue<Task> completedTasks;
 
+    /**
+     * Constructor por defecto que inicializa las listas de tareas pendientes y completadas.
+     */
     public Activity() {
         this.pendingTasks = new CustomQueue<>();
         this.completedTasks = new CustomQueue<>();
     }
+
+    /**
+     * Constructor que recibe el nombre y la descripción de la actividad.
+     *
+     * @param name        Nombre de la actividad.
+     * @param description Descripción de la actividad.
+     */
     public Activity(String name, String description) {
         this(name);
         this.description = description;
     }
 
+    /**
+     * Constructor que recibe solo el nombre de la actividad.
+     *
+     * @param name Nombre de la actividad.
+     */
     public Activity(String name) {
         this.id = IDGenerator.generateID(); // Genera un ID único para la actividad
         this.name = name;
@@ -31,6 +49,11 @@ public class Activity  {
         this.completedTasks = new CustomQueue<>();
     }
 
+    /**
+     * Agrega una tarea a la lista de tareas pendientes.
+     *
+     * @param task Tarea a agregar.
+     */
     public void addTask(Task task) {
         pendingTasks.enqueue(task);
     }
@@ -51,41 +74,6 @@ public class Activity  {
         return task;
     }
 
-    public void UpdateTask(Task current, Task newTask){
-        pendingTasks.updateElement(current,newTask);
-    }
-
-    public void addCompletedTasks(Task task) {
-        completedTasks.enqueue(task);
-    }
-
-
-    public CustomQueue<Task> getPendingTasks() {
-        return pendingTasks;
-    }
-
-    public CustomQueue<Task> getCompletedTasks() {
-        return completedTasks;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    // Método que devuelve todas las tareas pendientes en forma de lista
-    public List<Task> getPendingTasksAsList() {
-        return pendingTasks.toList();
-    }
-
-    // Método que devuelve todas las tareas completadas en forma de lista
-    public List<Task> getCompletedTasksAsList() {
-        return completedTasks.toList();
-    }
-
     /**
      * Calcula y devuelve la duración total de la actividad.
      *
@@ -100,17 +88,33 @@ public class Activity  {
         return totalDuration;
     }
 
+    /**
+     * Convierte las tareas pendientes en un arreglo JSON.
+     *
+     * @return Arreglo JSON de tareas pendientes.
+     */
     public JsonArray pendingTasksToJson(){
         JsonArray tasksArray = new JsonArray();
         for (Task task : pendingTasks.toList()) tasksArray.add(task.toJson());
         return tasksArray;
     }
+
+    /**
+     * Convierte las tareas completadas en un arreglo JSON.
+     *
+     * @return Arreglo JSON de tareas completadas.
+     */
     public JsonArray completedTasksToJson(){
         JsonArray tasksArray = new JsonArray();
         for (Task task : completedTasks.toList()) tasksArray.add(task.toJson());
         return tasksArray;
     }
 
+    /**
+     * Convierte la actividad completa en un objeto JSON.
+     *
+     * @return Objeto JSON que representa la actividad.
+     */
     public JsonObject toJson(){
         JsonObject activity = new JsonObject();
         activity.addProperty("id",id);
@@ -121,6 +125,12 @@ public class Activity  {
         return activity;
     }
 
+    /**
+     * Busca una tarea por su ID dentro de la actividad.
+     *
+     * @param taskId ID de la tarea a buscar.
+     * @return La tarea encontrada o null si no se encuentra.
+     */
     public Task findTaskById(String taskId) {
         for (Task task : pendingTasks.toList()) {
             if (task.getId().equals(taskId)) {
@@ -160,6 +170,40 @@ public class Activity  {
     }
 
 
+    public void UpdateTask(Task current, Task newTask){
+        pendingTasks.updateElement(current,newTask);
+    }
+
+    public void addCompletedTasks(Task task) {
+        completedTasks.enqueue(task);
+    }
+
+
+    public CustomQueue<Task> getPendingTasks() {
+        return pendingTasks;
+    }
+
+    public CustomQueue<Task> getCompletedTasks() {
+        return completedTasks;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    // Método que devuelve todas las tareas pendientes en forma de lista
+    public List<Task> getPendingTasksAsList() {
+        return pendingTasks.toList();
+    }
+
+    // Método que devuelve todas las tareas completadas en forma de lista
+    public List<Task> getCompletedTasksAsList() {
+        return completedTasks.toList();
+    }
 
     @Override
     public String toString() {

@@ -10,11 +10,12 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * Custom implementation of a doubly linked list.
- * It provides methods to add, remove, and iterate over elements.
+ * Implementación personalizada de una lista doblemente enlazada.
+ * Proporciona métodos para agregar, eliminar e iterar sobre elementos.
  *
- * @param <E> the type of elements in this list
+ * @param <E> el tipo de elementos en esta lista
  */
+
 public class CustomDoublyLinkedList<E> {
     // Reference to the head node of the list
     private Node<E> head;
@@ -26,8 +27,8 @@ public class CustomDoublyLinkedList<E> {
     private int size;
 
     /**
-     * A node within the doubly linked list.
-     * This inner class is static because it does not need access to the instance variables of CustomDoublyLinkedList.
+     * Un nodo dentro de la lista doblemente enlazada.
+     * Esta clase interna es estática porque no necesita acceder a las variables de instancia de CustomDoublyLinkedList.
      */
     public static class Node<E> {
         E element;
@@ -35,11 +36,11 @@ public class CustomDoublyLinkedList<E> {
         Node<E> prev;
 
         /**
-         * Constructor for creating a new node with previous and next node references.
+         * Constructor para crear un nuevo nodo con referencias de nodo anterior y siguiente.
          *
-         * @param element the element to store in this node
-         * @param prev    the previous node in the list
-         * @param next    the next node in the list
+         * @param element el elemento para almacenar en este nodo
+         * @param prev    el nodo anterior en la lista
+         * @param next    el nodo siguiente en la lista
          */
         Node(E element, Node<E> prev, Node<E> next) {
             this.element = element;
@@ -48,12 +49,17 @@ public class CustomDoublyLinkedList<E> {
         }
 
         /**
-         * Constructor for creating a new node with no element and no next and previous node references.
+         * Constructor para crear un nuevo nodo sin elemento y sin referencias de nodo siguiente y anterior.
          */
         Node() {
             this(null, null, null);
         }
     }
+
+    /**
+     * Constructor por defecto de CustomDoublyLinkedList.
+     * Inicializa la lista con nodos de cabeza y cola ficticios.
+     */
     public CustomDoublyLinkedList() {
         head = new Node<>();
         tail = new Node<>(null, head, null);
@@ -62,39 +68,67 @@ public class CustomDoublyLinkedList<E> {
     }
 
     /**
-     * Adds an element to the beginning of the list.
+     * Agrega un elemento al principio de la lista.
      *
-     * @param element the element to add
+     * @param element el elemento a añadir
      */
     public void addFirst(E element) {
         addBetween(element, head, head.next);
     }
 
-
+    /**
+     * Agrega un elemento al final de la lista.
+     *
+     * @param element el elemento a añadir
+     */
     public void addLast(E element) {
         addBetween(element, tail.prev, tail);
-    }
-    public E removeFirst() {
-        if (isEmpty()) return null;
-        return remove(head.next);
-    }
-    public E removeLast() {
-        if (isEmpty()) return null;
-        return remove(tail.prev);
-    }
-    public boolean isEmpty() {
-        return size == 0;
-    }
-    public int size() {
-        return size;
     }
 
 
     /**
-     * Finds the first element that matches the given predicate.
+     * Elimina el primer elemento de la lista.
      *
-     * @param predicate a predicate to apply to each element to determine if it should be returned
-     * @return the first matching element, or null if no element matches
+     * @return el elemento eliminado, o null si la lista está vacía
+     */
+    public E removeFirst() {
+        if (isEmpty()) return null;
+        return remove(head.next);
+    }
+
+    /**
+     * Elimina el último elemento de la lista.
+     *
+     * @return el elemento eliminado, o null si la lista está vacía
+     */
+    public E removeLast() {
+        if (isEmpty()) return null;
+        return remove(tail.prev);
+    }
+
+    /**
+     * Verifica si la lista está vacía.
+     *
+     * @return true si la lista está vacía, false de lo contrario
+     */
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Obtiene el tamaño actual de la lista.
+     *
+     * @return el tamaño de la lista
+     */
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Encuentra el primer elemento que cumple con el predicado dado.
+     *
+     * @param predicate el predicado a aplicar a cada elemento
+     * @return el primer elemento que cumple con el predicado, o null si ningún elemento cumple
      */
     public E findFirst(Predicate<E> predicate) {
         Node<E> current = head.next;
@@ -107,6 +141,12 @@ public class CustomDoublyLinkedList<E> {
         return null;
     }
 
+    /**
+     * Encuentra todos los elementos que cumplen con el predicado dado.
+     *
+     * @param predicate el predicado a aplicar a cada elemento
+     * @return una lista de elementos que cumplen con el predicado
+     */
     public List<E> findAll(Predicate<E> predicate) {
         List<E> matchingElements = new ArrayList<>();
         Node<E> current = head.next;
@@ -161,14 +201,23 @@ public class CustomDoublyLinkedList<E> {
     }
 
     /**
-     * Converts this CustomDoublyLinkedList to a standard List.
-     * @return A standard List containing the elements of the CustomDoublyLinkedList.
+     * Convierte esta CustomDoublyLinkedList a una List estándar.
+     *
+     * @return una List estándar que contiene los elementos de CustomDoublyLinkedList
      */
     public List<E> toList() {
         List<E> list = new ArrayList<>();
         this.forEach(list::add,false);
         return list;
     }
+
+    /**
+     * Agrega un nuevo nodo con el elemento dado entre el predecesor y el sucesor dados.
+     *
+     * @param element     el elemento a agregar en un nuevo nodo
+     * @param predecessor el nodo predecesor al nuevo nodo a agregar
+     * @param successor   el nodo sucesor al nuevo nodo a agregar
+     */
     private void addBetween(E element, Node<E> predecessor, Node<E> successor) {
         // Crear y enlazar un nuevo nodo entre el predecesor y el sucesor
         Node<E> newNode = new Node<>(element, predecessor, successor);
@@ -176,6 +225,13 @@ public class CustomDoublyLinkedList<E> {
         successor.prev = newNode;
         size++;
     }
+
+    /**
+     * Elimina el nodo dado de la lista y devuelve su elemento.
+     *
+     * @param node el nodo a eliminar de la lista
+     * @return el elemento del nodo eliminado
+     */
     private E remove(Node<E> node) {
         Node<E> predecessor = node.prev;
         Node<E> successor = node.next;
@@ -185,6 +241,12 @@ public class CustomDoublyLinkedList<E> {
         return node.element;
     }
 
+    /**
+     * Crea una CustomDoublyLinkedList a partir de una List estándar.
+     *
+     * @param list la List de la cual se creará la CustomDoublyLinkedList
+     * @return una nueva CustomDoublyLinkedList que contiene los elementos de la List dada
+     */
     public static <E> CustomDoublyLinkedList<E> fromList(List<E> list) {
         CustomDoublyLinkedList<E> customList = new CustomDoublyLinkedList<>();
         for (E element : list) {
@@ -193,6 +255,12 @@ public class CustomDoublyLinkedList<E> {
         return customList;
     }
 
+    /**
+     * Encuentra el primer nodo que contiene el elemento dado.
+     *
+     * @param element el elemento a buscar en la lista
+     * @return el nodo que contiene el elemento, o null si no se encuentra en la lista
+     */
     private Node<E> findNode(E element) {
         Node<E> current = head.next;
         while (current != tail) {
@@ -204,6 +272,12 @@ public class CustomDoublyLinkedList<E> {
         return null; // Retorna null si el elemento no se encuentra en la lista
     }
 
+    /**
+     * Intercambia los elementos de dos nodos que contienen los elementos dados.
+     *
+     * @param elementA el primer elemento a intercambiar
+     * @param elementB el segundo elemento a intercambiar
+     */
     public void swapElements(E elementA, E elementB) {
         Node<E> nodeA = findNode(elementA);
         Node<E> nodeB = findNode(elementB);
@@ -215,7 +289,13 @@ public class CustomDoublyLinkedList<E> {
             nodeB.element = temp;
         }
     }
-
+    /**
+     * Obtiene el elemento en la posición dada.
+     *
+     * @param i la posición del elemento deseado
+     * @return el elemento en la posición dada
+     * @throws IndexOutOfBoundsException si el índice está fuera de los límites de la lista
+     */
     public E get(int i) {
         if (i < 0 || i >= size) {
             throw new IndexOutOfBoundsException("Index: " + i + ", Size: " + size);
@@ -228,6 +308,11 @@ public class CustomDoublyLinkedList<E> {
         return current.element;
     }
 
+    /**
+     * Mueve hacia adelante el nodo que contiene el elemento dado.
+     *
+     * @param element el elemento del nodo a mover hacia adelante
+     */
     public void moveNodeForward(E element) {
         if (head.next == tail || head.next.next == tail) {
             // La lista está vacía o solo tiene un elemento.
@@ -251,6 +336,11 @@ public class CustomDoublyLinkedList<E> {
         }
     }
 
+    /**
+     * Mueve hacia atrás el nodo que contiene el elemento dado.
+     *
+     * @param element el elemento del nodo a mover hacia atrás
+     */
     public void moveNodeBackward(E element) {
         if (head.next == tail || head.next.next == tail) {
             // La lista está vacía o solo tiene un elemento.
@@ -274,6 +364,12 @@ public class CustomDoublyLinkedList<E> {
         }
     }
 
+    /**
+     * Intercambia los nodos que contienen los elementos dados.
+     *
+     * @param nodeA el primer nodo a intercambiar
+     * @param nodeB el segundo nodo a intercambiar
+     */
     private void swapNodes(Node<E> nodeA, Node<E> nodeB) {
         // Asumiendo que nodeA y nodeB son adyacentes y nodeA está antes de nodeB
         Node<E> aPrev = nodeA.prev;
@@ -301,6 +397,11 @@ public class CustomDoublyLinkedList<E> {
         }
     }
 
+    /**
+     * Retorna un iterador sobre los elementos de la lista.
+     *
+     * @return un iterador que recorre los elementos de la lista
+     */
     public Iterator<E> iterator() {
         return new Iterator<E>() {
             private Node<E> current = head;

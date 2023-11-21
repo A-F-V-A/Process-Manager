@@ -4,12 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
 import edu.est.process.manager.domain.util.IDGenerator;
-
-import java.io.Serializable;
 import java.util.Iterator;
-import java.util.Objects;
-import java.util.PrimitiveIterator;
 
+
+/**
+ * Clase que representa un proceso personalizado en el sistema.
+ */
 public class CustomProcess {
     private String id;
     private String name;
@@ -17,65 +17,50 @@ public class CustomProcess {
     private CustomDoublyLinkedList<Activity> activities;
     private int totalDurationMinutes = 0;
 
+    /**
+     * Constructor por defecto que inicializa la lista de actividades.
+     */
     public CustomProcess(){
         this.activities = new CustomDoublyLinkedList<>();
     }
 
+    /**
+     * Constructor que recibe el nombre y la descripción del proceso.
+     *
+     * @param name        Nombre del proceso.
+     * @param description Descripción del proceso.
+     */
     public CustomProcess(String name,String description) {
         this(name);
         this.description = description;
     }
 
+    /**
+     * Constructor que recibe solo el nombre del proceso.
+     *
+     * @param name Nombre del proceso.
+     */
     public CustomProcess(String name) {
         this.id = IDGenerator.generateID();
         this.name = name;
         this.activities = new CustomDoublyLinkedList<>();
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
+    /**
+     * Agrega una actividad al proceso y actualiza la duración total del proceso.
+     *
+     * @param activity Actividad a agregar.
+     */
     public void addActivity(Activity activity) {
         activities.addLast(activity);
         updateTotalDuration();
     }
 
-    public Activity getActivity(String activityId) {
-        return activities.findFirst(activity -> activity.getId().equals(activityId));
-    }
-
-    public boolean removeActivity(String activityId) {
-        boolean isRemoved = activities.removeIf(activity -> activity.getId().equals(activityId));
-        if (isRemoved) {
-            updateTotalDuration();
-        }
-        return isRemoved;
-    }
-
-    private void updateTotalDuration(int totalDurationMinutes) {
-        this.totalDurationMinutes += totalDurationMinutes;
-    }
-
-    public void updateTotalDuration() {
-        this.totalDurationMinutes = 0;
-        activities.forEach(duration ->
-                        updateTotalDuration(duration.getTotalDurationMinutes())
-                ,false);
-    }
-
-    public int getTotalDurationMinutes(){
-        return this.totalDurationMinutes;
-    }
-
-    public CustomDoublyLinkedList<Activity> getActivities() {
-        return activities;
-    }
-
+    /**
+     * Genera un objeto JSON representando el proceso y sus actividades.
+     *
+     * @return Objeto JSON representando el proceso.
+     */
     public JsonObject toJson(){
         JsonObject process = new JsonObject();
         process.addProperty("id",id);
@@ -129,6 +114,36 @@ public class CustomProcess {
         return null; // La tarea no se encontró en la actividad con el nombre dado
     }
 
+    public Activity getActivity(String activityId) {
+        return activities.findFirst(activity -> activity.getId().equals(activityId));
+    }
+
+    public boolean removeActivity(String activityId) {
+        boolean isRemoved = activities.removeIf(activity -> activity.getId().equals(activityId));
+        if (isRemoved) {
+            updateTotalDuration();
+        }
+        return isRemoved;
+    }
+
+    private void updateTotalDuration(int totalDurationMinutes) {
+        this.totalDurationMinutes += totalDurationMinutes;
+    }
+
+    public void updateTotalDuration() {
+        this.totalDurationMinutes = 0;
+        activities.forEach(duration ->
+                        updateTotalDuration(duration.getTotalDurationMinutes())
+                ,false);
+    }
+
+    public int getTotalDurationMinutes(){
+        return this.totalDurationMinutes;
+    }
+
+    public CustomDoublyLinkedList<Activity> getActivities() {
+        return activities;
+    }
     public void setId(String id) {
         this.id = id;
     }
@@ -152,4 +167,13 @@ public class CustomProcess {
     public void setTotalDurationMinutes(int totalDurationMinutes) {
         this.totalDurationMinutes = totalDurationMinutes;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }
