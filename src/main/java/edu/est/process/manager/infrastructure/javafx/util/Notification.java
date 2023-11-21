@@ -2,6 +2,8 @@ package edu.est.process.manager.infrastructure.javafx.util;
 
 import edu.est.process.manager.domain.models.Task;
 import edu.est.process.manager.domain.models.TaskStatus;
+import edu.est.process.manager.infrastructure.javafx.components.CAlert;
+import javafx.scene.control.Alert;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,27 +47,35 @@ public class Notification {
             Iterator<Task> iterator = tasks.iterator();
             while (iterator.hasNext()) {
                 Task task = iterator.next();
-                int durationMinutes = task.getDurationMinutes();
-                int remainingMinutes = durationMinutes;
+                int remainingMinutes = task.getDurationMinutes();
 
-                if (durationMinutes <= 0) {
+                if (remainingMinutes <= 0) {
                     System.out.println("Recordatorio: La tarea '" + task.getDescription() + "' ha expirado.");
+                    CAlert.Alert(Alert.AlertType.INFORMATION,"Task Completion","Saved successfully","");
                     task.setStatus(TaskStatus.DELAYED);
                     iterator.remove();
-                } else {
-                    // Calcular el porcentaje de tiempo para recibir alertas
-                    double percentage = durationMinutes * notificationThreshold / 100.0;
 
-                    if (durationMinutes == 1) {
+                } else {
+                    double timeNotify = (remainingMinutes * notificationThreshold) / 100.0;
+
+                    if (remainingMinutes == 1) {
                         System.out.println("Recordatorio: La tarea '" + task.getDescription() + "' está por expirar en 1 minuto.");
-                    } else if (remainingMinutes <= percentage && remainingMinutes > 0) {
+                        CAlert.Alert(Alert.AlertType.INFORMATION,"Task Completion","the task has timed out ","");
+
+                    } else if (remainingMinutes <= timeNotify && remainingMinutes > 0) {
                         System.out.println("Recordatorio: La tarea '" + task.getDescription() + "' está por expirar en " + remainingMinutes + " minutos.");
+                        CAlert.Alert(Alert.AlertType.INFORMATION,"Task About to Finish","Reminder: Task '" + task.getDescription() +
+                                "' is about to expire in " + remainingMinutes + " minutes.", "");
+
                     } else if (remainingMinutes < 1) {
                         System.out.println("Recordatorio: La tarea '" + task.getDescription() + "' ha finalizado antes del tiempo estimado.");
+                        CAlert.Alert(Alert.AlertType.INFORMATION,"Task About to Completed","Reminder: Task '" + task.getDescription() +
+                                "' has finished before the estimated time. ", "");
+
                         task.setStatus(TaskStatus.COMPLETED);
                         iterator.remove();
                     }
-                    task.setDurationMinutes(durationMinutes - 1);
+                    task.setDurationMinutes(remainingMinutes - 1);
                 }
             }
 

@@ -16,8 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import static edu.est.process.manager.domain.util.JsonFileUtil.saveJsonObjectToFile;
-
 public class ProcessManager {
     // Única instancia de ProcessManager
     private static ProcessManager instance;
@@ -73,10 +71,18 @@ public class ProcessManager {
         return processes.remove(id);
     }
 
+    /**
+     * Obtiene todos los procesos almacenados.
+     *
+     * @return un mapa con todos los procesos almacenados.
+     */
     public Map<String, CustomProcess> getProcesses() {
         return processes;
     }
 
+    /**
+     * Guarda los datos de los procesos en un archivo JSON.
+     */
     public void saveData(){
         JsonObject fileSave = new JsonObject();
         JsonArray processArray = new JsonArray();
@@ -84,6 +90,10 @@ public class ProcessManager {
         fileSave.add("process",processArray);
         saveJsonObjectToFile(fileSave,"processManager.json");
     }
+
+    /**
+     * Carga los datos de un archivo JSON a los procesos.
+     */
     public void loadData(){
         JsonObject data = JsonFileUtil.readJsonFromFile("processManager.json");
         if(data == null) return;
@@ -95,6 +105,12 @@ public class ProcessManager {
         }
     }
 
+    /**
+     * Crea un objeto CustomProcess a partir de un JsonObject.
+     *
+     * @param process el JsonObject que contiene la información del proceso.
+     * @return un objeto CustomProcess creado a partir del JsonObject.
+     */
     private CustomProcess createProcess(JsonObject process) {
         CustomProcess loadProcess = new CustomProcess();
 
@@ -104,6 +120,13 @@ public class ProcessManager {
 
         return loadProcess;
     }
+
+    /**
+     * Rellena las actividades de un proceso a partir de un JsonObject.
+     *
+     * @param Objectivity el JsonObject que contiene la información de las actividades.
+     * @param process     el CustomProcess al que se agregarán las actividades.
+     */
     private void fillActivity(JsonObject Objectivity,CustomProcess process) {
         JsonArray activityArray = Objectivity.getAsJsonArray("activities");
         for (int i = 0; i < activityArray.size();i++){
@@ -112,6 +135,13 @@ public class ProcessManager {
             process.addActivity(activity);
         }
     }
+
+    /**
+     * Crea un objeto Activity a partir de un JsonObject.
+     *
+     * @param activity el JsonObject que contiene la información de la actividad.
+     * @return un objeto Activity creado a partir del JsonObject.
+     */
     private Activity createActivity(JsonObject activity) {
         Activity loadActivity = new Activity();
 
@@ -121,6 +151,13 @@ public class ProcessManager {
 
         return loadActivity;
     }
+
+    /**
+     * Rellena las tareas de una actividad a partir de un JsonObject.
+     *
+     * @param Objectivity el JsonObject que contiene la información de las tareas.
+     * @param activity    la Activity a la que se agregarán las tareas.
+     */
     private void fillTask(JsonObject Objectivity,Activity activity) {
         JsonArray pendingTasksArray   = Objectivity.getAsJsonArray("pendingTasks");
         JsonArray completedTasksArray = Objectivity.getAsJsonArray("completedTasks");
@@ -133,6 +170,13 @@ public class ProcessManager {
             activity.addCompletedTasks(task);
         }
     }
+
+    /**
+     * Crea un objeto Task a partir de un JsonObject.
+     *
+     * @param task el JsonObject que contiene la información de la tarea.
+     * @return un objeto Task creado a partir del JsonObject.
+     */
     private Task createTask(JsonObject task) {
         Task newTask = new Task();
 
@@ -144,6 +188,11 @@ public class ProcessManager {
         return newTask;
     }
 
+    /**
+     * Guarda los datos de los procesos en un archivo Excel.
+     *
+     * @param fileExcel la ruta del archivo Excel donde se guardarán los datos.
+     */
     public void saveDataExcel(String fileExcel) {
 
         JsonObject data = JsonFileUtil.readJsonFromFile("processManager.json");
@@ -205,6 +254,14 @@ public class ProcessManager {
         }
     }
 
+    /**
+     * Rellena las actividades y las tareas de un proceso a partir de un JsonObject y las escribe en una hoja Excel.
+     *
+     * @param processObject el JsonObject que contiene la información de las actividades y tareas.
+     * @param process       el CustomProcess al que se agregarán las actividades.
+     * @param sheet         la hoja Excel donde se escribirán los datos.
+     * @param rowNum        el número de fila donde se comenzará a escribir.
+     */
     private void fillActivityAndTasks(JsonObject processObject, CustomProcess process, Sheet sheet, int rowNum) {
 
         JsonArray activityArray = processObject.getAsJsonArray("activities");
@@ -225,6 +282,14 @@ public class ProcessManager {
 
     }
 
+    /**
+     * Rellena las tareas de una actividad en una hoja Excel y aumenta el número de fila.
+     *
+     * @param activity la Activity de la que se obtendrán las tareas.
+     * @param sheet    la hoja Excel donde se escribirán los datos.
+     * @param rowNum   el número de fila donde se comenzará a escribir.
+     * @return el número de fila actualizado después de rellenar las tareas.
+     */
     private int fillTasksIntoSheet(Activity activity, Sheet sheet, int rowNum) {
 
         List<Task> pendingTasks = (List<Task>) activity.getPendingTasks();
@@ -246,7 +311,12 @@ public class ProcessManager {
 
     }
 
-
+    /**
+     * Escribe los datos de una tarea en una fila de una hoja Excel.
+     *
+     * @param row  la fila donde se escribirán los datos de la tarea.
+     * @param task la Task de la que se obtendrán los datos.
+     */
     private void writeTaskDataToRow(Row row, Task task) {
         row.createCell(7).setCellValue(task.getId());
         row.createCell(8).setCellValue(task.getStatus().ordinal());
@@ -254,12 +324,24 @@ public class ProcessManager {
         row.createCell(10).setCellValue(task.getDurationMinutes());
     }
 
+    /**
+     * Escribe los datos de una actividad en una fila de una hoja Excel.
+     *
+     * @param row      la fila donde se escribirán los datos de la actividad.
+     * @param activity la Activity de la que se obtendrán los datos.
+     */
     private void writeActivitiesDataToRow(Row row, Activity activity) {
         row.createCell(4).setCellValue(activity.getId());
         row.createCell(5).setCellValue(activity.getName());
         row.createCell(6).setCellValue(activity.getDescription());
     }
 
+    /**
+     * Escribe los datos de un CustomProcess en una fila de una hoja Excel.
+     *
+     * @param row     la fila donde se escribirán los datos del CustomProcess.
+     * @param process el CustomProcess del que se obtendrán los datos.
+     */
     private void writeProcessDataToRow(Row row, CustomProcess process) {
         row.createCell(0).setCellValue(process.getId());
         row.createCell(1).setCellValue(process.getName());
@@ -267,6 +349,12 @@ public class ProcessManager {
         row.createCell(3).setCellValue(process.getTotalDurationMinutes());
     }
 
+    /**
+     * Lee datos desde un archivo Excel, los formatea como JSON y los guarda en un archivo.
+     *
+     * @param excelFilePath la ruta del archivo Excel.
+     * @param jsonFilePath  la ruta del archivo JSON donde se guardarán los datos.
+     */
     public void  readDataFromExcelAndSaveAsJson(String excelFilePath, String jsonFilePath) {
 
         Map<String, List<?>> dataFromExcel = readDataFromExcel(excelFilePath);
@@ -274,6 +362,12 @@ public class ProcessManager {
         saveJsonObjectToFile(jsonToSave, jsonFilePath);
     }
 
+    /**
+     * Lee datos desde un archivo Excel y los devuelve como un mapa con listas.
+     *
+     * @param filePath la ruta del archivo Excel.
+     * @return un mapa que contiene datos leídos del archivo Excel.
+     */
     private Map<String, List<?>> readDataFromExcel(String filePath) {
         Map<String, List<?>> excelData = new HashMap<>();
 
@@ -333,36 +427,39 @@ public class ProcessManager {
         return excelData;
     }
 
+    /**
+     * Formatea datos leídos desde un archivo Excel como JSON.
+     *
+     * @param dataFromExcel los datos leídos desde un archivo Excel.
+     * @return un JsonObject que contiene los datos formateados como JSON.
+     */
     private JsonObject formatDataToJson(Map<String, List<?>> dataFromExcel) {
         JsonObject json = new JsonObject();
-
-        // Crear un array JSON para almacenar los datos
         JsonArray jsonArray = new JsonArray();
 
-        // Obtener las listas de datos del mapa y recorrerlas para convertirlas en JSON
         List<String> column1Data = (List<String>) dataFromExcel.get("column1");
         List<String> column2Data = (List<String>) dataFromExcel.get("column2");
-        // ... obtener más listas si es necesario
 
-        // Asumiendo que las listas tienen la misma longitud
         int rows = column1Data.size();
         for (int i = 0; i < rows; i++) {
             JsonObject jsonObject = new JsonObject();
-            // Agregar datos al objeto JSON
             jsonObject.addProperty("column1", column1Data.get(i));
             jsonObject.addProperty("column2", column2Data.get(i));
-            // ... agregar más propiedades si es necesario
 
-            // Agregar cada objeto JSON al array JSON
             jsonArray.add(jsonObject);
         }
 
-        // Agregar el array JSON al objeto JSON principal
         json.add("data", jsonArray);
 
         return json;
     }
 
+    /**
+     * Guarda un JsonObject como archivo en la ruta especificada.
+     *
+     * @param jsonObject el JsonObject que se va a guardar como archivo.
+     * @param filePath   la ruta donde se guardará el archivo.
+     */
     private void saveJsonObjectToFile(JsonObject jsonObject, String filePath) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
             Gson gson = new Gson();
@@ -374,6 +471,12 @@ public class ProcessManager {
         }
     }
 
+    /**
+     * Obtiene una lista de CustomProcess desde un archivo Excel.
+     *
+     * @param filePath la ruta del archivo Excel.
+     * @return una lista de CustomProcess obtenida desde el archivo Excel.
+     */
     private List<CustomProcess> getProcesses(String filePath) {
         List<CustomProcess> processes = new ArrayList<>();
 
@@ -404,6 +507,12 @@ public class ProcessManager {
         return processes;
     }
 
+    /**
+     * Obtiene una lista de Activity desde un archivo Excel.
+     *
+     * @param filePath la ruta del archivo Excel.
+     * @return una lista de Activity obtenida desde el archivo Excel.
+     */
     private List<Activity> getActivities(String filePath) {
         List<Activity> activities = new ArrayList<>();
 
@@ -432,6 +541,12 @@ public class ProcessManager {
         return activities;
     }
 
+    /**
+     * Obtiene una lista de Task desde un archivo Excel.
+     *
+     * @param filePath la ruta del archivo Excel.
+     * @return una lista de Task obtenida desde el archivo Excel.
+     */
     private List<Task> getTask(String filePath) {
         List<Task> tasks = new ArrayList<>();
 
@@ -461,6 +576,11 @@ public class ProcessManager {
         return tasks;
     }
 
+    /**
+     * Carga CustomProcess desde un archivo Excel.
+     *
+     * @param filePath la ruta del archivo Excel.
+     */
     private void loadCustomProcess(String filePath) {
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
             Workbook workbook = new XSSFWorkbook(fileInputStream);
@@ -495,6 +615,11 @@ public class ProcessManager {
         }
     }
 
+    /**
+     * Carga Activity desde un archivo Excel.
+     *
+     * @param filePath la ruta del archivo Excel.
+     */
     public void loadActivities(String filePath) {
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
             Workbook workbook = new XSSFWorkbook(fileInputStream);
@@ -533,6 +658,11 @@ public class ProcessManager {
         }
     }
 
+    /**
+     * Carga Task desde un archivo Excel.
+     *
+     * @param filePath la ruta del archivo Excel.
+     */
     public void loadTasks(String filePath) {
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
             Workbook workbook = new XSSFWorkbook(fileInputStream);

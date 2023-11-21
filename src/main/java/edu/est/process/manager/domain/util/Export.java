@@ -21,7 +21,12 @@ public class Export {
 
     private Map<String, CustomProcess> processes;
 
-
+    /**
+     * Guarda los datos en un archivo Excel en la ruta especificada.
+     *
+     * @param fileExcel Ruta donde se guardará el archivo Excel.
+     * @throws IOException Si ocurre un error de E/S durante la escritura del archivo.
+     */
     public void saveData(String fileExcel) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Process Data");
@@ -92,6 +97,11 @@ public class Export {
         workbook.close();
     }
 
+    /**
+     * Obtiene los encabezados de las columnas del archivo Excel.
+     *
+     * @return Un mapa que contiene los nombres de las columnas y su respectivo índice.
+     */
     public Map<String, Integer> columnHeaders() {
         Map<String, Integer> columnHeaders = new HashMap<>();
         columnHeaders.put("nombre proceso", 0);
@@ -109,6 +119,13 @@ public class Export {
         return columnHeaders;
     }
 
+    /**
+     * Crea la estructura base del archivo Excel con los encabezados de columnas.
+     *
+     * @param workbook      El libro de trabajo de Excel.
+     * @param sheet         La hoja de cálculo en la que se trabajarán los datos.
+     * @param columnHeaders Los encabezados de las columnas del archivo Excel.
+     */
     public void crearBaseExcel(Workbook workbook, Sheet sheet, Map<String, Integer> columnHeaders) {
         Row row = sheet.createRow(0);
         for (String columnHeader : columnHeaders.keySet()) {
@@ -117,7 +134,13 @@ public class Export {
         }
     }
 
-
+    /**
+     * Importa datos desde un archivo Excel y los devuelve como una lista de arreglos de cadenas.
+     *
+     * @param filePath La ruta del archivo Excel a importar.
+     * @return Una lista que contiene los datos importados del archivo Excel.
+     * @throws IOException Si ocurre un error de E/S durante la lectura del archivo.
+     */
     public List<String[]> importFromExcel(String filePath) throws IOException {
         if (!validateExcelFile(filePath)) {
             System.err.println("El archivo no cumple con los criterios requeridos.");
@@ -160,6 +183,12 @@ public class Export {
         return importedData;
     }
 
+    /**
+     * Valida la estructura y contenido de un archivo Excel.
+     *
+     * @param filePath La ruta del archivo Excel a validar.
+     * @return {@code true} si el archivo cumple con los criterios, {@code false} en caso contrario.
+     */
     public boolean validateExcelFile(String filePath) {
         try (FileInputStream fileInputStream = new FileInputStream(filePath);
              Workbook workbook = new XSSFWorkbook(fileInputStream)) {

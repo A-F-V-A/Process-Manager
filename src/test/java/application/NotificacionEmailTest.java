@@ -57,7 +57,7 @@ class NotificacionEmailTest {
 
         // Envía el correo y maneja posibles excepciones
         try {
-            notification.sendEmail("xxsigfridxxx@gmail.com", task, "Este es un correo de prueba.");
+            notification.sendEmail("xxsigfridxxx@gmail.com", task, "Este es un correo de prueba.", "");
         } catch (Exception e) {
             fail("Error al enviar el correo electrónico: " + e.getMessage());
         }

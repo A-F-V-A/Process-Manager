@@ -28,7 +28,6 @@ public class LibraryController implements Initializable {
 
 
     private ProcessManager manager;
-    private File file;
     @FXML
     public AnchorPane p_container;
     @FXML
@@ -92,7 +91,7 @@ public class LibraryController implements Initializable {
         navActive(source.getId());
         clear();
         Notification();
-        CAlert.Alert(Alert.AlertType.WARNING,"Alerta Tiempo","Hola Soy una alerta","Cierrame");
+//        CAlert.Alert(Alert.AlertType.WARNING,"Alerta Tiempo","Hola Soy una alerta","Cierrame");
     }
 
     @FXML
@@ -100,7 +99,7 @@ public class LibraryController implements Initializable {
         Node source = (Node) event.getSource();
         navActive(source.getId());
         clear();
-        ExportImport(file);
+        ExportImport();
     }
     private void pendingTasks(VBox root, String name){
         List<Node> taskPending = NodeExplorer.findNodes(root, node -> node.getStyleClass().contains("pending-tasks-container"));
@@ -204,10 +203,10 @@ public class LibraryController implements Initializable {
         component.setLayoutX(xPosition);
         component.setLayoutY(yPosition);
     }
-    public void ExportImport(File file) {
+    public void ExportImport() {
         VBox container = new VBox(10);
         CExportImport exportImport = new CExportImport(manager);
-        VBox component = exportImport.render(file);
+        VBox component = exportImport.render();
         p_container.getChildren().add(component);
 
         double xPosition = (p_container.getWidth() - 300.0) / 2;

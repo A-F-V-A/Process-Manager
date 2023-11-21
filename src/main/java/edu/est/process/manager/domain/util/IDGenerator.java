@@ -1,12 +1,14 @@
 package edu.est.process.manager.domain.util;
 
 import java.util.UUID;
-
+/**
+ * Clase que genera id.
+ */
 public class IDGenerator {
     /**
-     * Generates a unique identifier as a String.
+     * Genera un identificador único como una cadena de texto.
      *
-     * @return A unique identifier string.
+     * @return Una cadena de texto que representa un identificador único.
      */
     public static String generateID() {
         return UUID.randomUUID().toString();

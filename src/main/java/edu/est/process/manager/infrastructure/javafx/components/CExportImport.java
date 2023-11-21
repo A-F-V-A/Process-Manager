@@ -1,9 +1,6 @@
 package edu.est.process.manager.infrastructure.javafx.components;
 
-import edu.est.process.manager.domain.models.Activity;
-import edu.est.process.manager.domain.models.CustomProcess;
-import edu.est.process.manager.domain.models.ProcessManager;
-import edu.est.process.manager.domain.models.Task;
+import edu.est.process.manager.domain.models.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -31,7 +28,7 @@ public class CExportImport {
     }
 
 
-    public VBox render(File file) {
+    public VBox render() {
         VBox card = new VBox();
         card.setAlignment(Pos.CENTER_LEFT);
         card.setSpacing(10.0);
@@ -50,7 +47,7 @@ public class CExportImport {
 
         Button importButton = new Button("Importar tabla de procesos");
         importButton.setMaxWidth(Double.MAX_VALUE);
-        importButton.setOnAction(event -> handleImportAction(file));
+        importButton.setOnAction(event -> handleImportAction());
 
         Button exportButton = new Button("Exportar tabla de procesos");
         exportButton.setMaxWidth(Double.MAX_VALUE);
@@ -65,9 +62,9 @@ public class CExportImport {
         return card;
     }
 
-    private void handleImportAction(File file) {
+    private void handleImportAction() {
         CExportImport exportImport = new CExportImport(processManager);
-        fileUpload(file);
+        fileUpload();
 
     }
 
@@ -86,7 +83,7 @@ public class CExportImport {
         headerRow.createCell(6).setCellValue("ID de Tarea");
         headerRow.createCell(7).setCellValue("Estado de a Tarea");
         headerRow.createCell(8).setCellValue("Descripción");
-        headerRow.createCell(9).setCellValue("Duración en minutos");
+
 
         for (CustomProcess process : processManager.getProcesses().values()) {
 
@@ -114,7 +111,6 @@ public class CExportImport {
                     row.createCell(6).setCellValue(task.getId());
                     row.createCell(7).setCellValue(task.getStatus().ordinal());
                     row.createCell(8).setCellValue(task.getDescription());
-                    row.createCell(9).setCellValue(task.getDurationMinutes());
 
                 }
             }
@@ -126,13 +122,15 @@ public class CExportImport {
             workbook.close();
             outputStream.close();
             System.out.println("¡Datos exportados exitosamente a Procesos.xlsx!");
+            CAlert.Alert(Alert.AlertType.CONFIRMATION,"Successfully Export","Data has been Export successfully","Closed");
+
         } catch (IOException e) {
             e.printStackTrace();
+            CAlert.Alert(Alert.AlertType.ERROR,"Wrong Export","Data could not be Exported","Closed");
         }
     }
 
-    private void fileUpload(File selectFile) {
-
+    private void fileUpload() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccionar archivo Excel");
 
@@ -144,11 +142,12 @@ public class CExportImport {
 
         if (selectedFile != null) {
             System.out.println("Archivo Excel seleccionado: " + selectedFile.getName());
-            importData(selectFile);
+            importData(selectedFile);
         } else {
             System.out.println("Ningún archivo Excel seleccionado.");
         }
     }
+
 
     public void exportData() {
         Workbook workbook = new XSSFWorkbook();
@@ -200,24 +199,32 @@ public class CExportImport {
 
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) {
-                    // Saltar la primera fila si es el encabezado
                     continue;
                 }
 
-                String name = row.getCell(0).getStringCellValue(); // Cambia los índices según las columnas de tu archivo
-                String description = row.getCell(1).getStringCellValue();
-                // Lee más celdas según la estructura de tu archivo y clase CustomProcess
+                String name = row.getCell(1).getStringCellValue();
+                String id = row.getCell(0).getStringCellValue();
+                String description = row.getCell(2).getStringCellValue();
+                String nameActivity = row.getCell(4).getStringCellValue();
+                String descriptionActivity = row.getCell(5).getStringCellValue();
+                TaskStatus statusTask = TaskStatus.valueOf(row.getCell(7).getStringCellValue());
+                String descriptionTask = row.getCell(8).getStringCellValue();
+                int durationTask = Integer.parseInt(row.getCell(9).getStringCellValue());
 
-                // Aquí debes crear tu objeto CustomProcess y agregarlo al ProcessManager
-                CustomProcess process = new CustomProcess(name, description);
-                processManager.addProcess(process);
+                CustomProcess processImport = new CustomProcess(name, description);
+                Activity activityImport = new Activity(nameActivity, descriptionActivity);
+                Task taskImport = new Task(descriptionTask, statusTask, durationTask);
+                processManager.addProcess(processImport);
             }
 
             workbook.close();
             inputStream.close();
-            System.out.println("¡Datos importados exitosamente desde el archivo!");
+            System.out.println("¡Datos importados exitosamente desde el archivo!" + selectedFile);
+            CAlert.Alert(Alert.AlertType.CONFIRMATION,"Successfully Imported","Data has been imported successfully","Closed");
         } catch (IOException e) {
             e.printStackTrace();
+            CAlert.Alert(Alert.AlertType.ERROR,"Wrong Import","Data could not be imported","Closed");
+
         }
     }
 }

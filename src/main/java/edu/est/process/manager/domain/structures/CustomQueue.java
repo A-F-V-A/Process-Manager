@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Custom implementation of a queue data structure (FIFO - First In, First Out).
- * This class is designed to store elements of any generic type {@code E}.
+ * Implementación personalizada de una estructura de datos cola (FIFO - First In, First Out).
+ * Esta clase está diseñada para almacenar elementos de cualquier tipo genérico {@code E}.
  *
- * @param <E> The type of elements stored by the queue.
+ * @param <E> El tipo de elementos almacenados por la cola.
  */
 public class CustomQueue<E> {
 
@@ -20,17 +20,17 @@ public class CustomQueue<E> {
 
 
     /**
-     * Static inner class representing a node in the queue.
+     * Clase interna estática que representa un nodo en la cola.
      */
     private static class Node<E> {
         E element;
         Node<E> next;
 
         /**
-         * Constructor to create a new node.
+         * Constructor para crear un nuevo nodo.
          *
-         * @param element The element to be stored in the node.
-         * @param next The next node in the queue.
+         * @param element El elemento que se almacenará en el nodo.
+         * @param next El siguiente nodo en la cola.
          */
         Node(E element, Node<E> next) {
             this.element = element;
@@ -39,8 +39,8 @@ public class CustomQueue<E> {
     }
 
     /**
-     * Constructor for creating an instance of CustomQueue.
-     * Initializes the queue with head and tail as null and size as 0.
+     * Constructor para crear una instancia de CustomQueue.
+     * Inicializa la cola con head y tail como null y size como 0.
      */
     public CustomQueue() {
         head = null;
@@ -49,27 +49,27 @@ public class CustomQueue<E> {
     }
 
     /**
-     * Checks if the queue is empty.
+     * Comprueba si la cola está vacía.
      *
-     * @return {@code true} if the queue is empty, {@code false} otherwise.
+     * @return {@code true} si la cola está vacía, {@code false} en caso contrario.
      */
     public boolean isEmpty() {
         return size == 0;
     }
 
     /**
-     * Returns the number of elements in the queue.
+     * Devuelve el número de elementos en la cola.
      *
-     * @return The size of the queue.
+     * @return El tamaño de la cola.
      */
     public int size() {
         return size;
     }
 
     /**
-     * Adds a new element to the end of the queue.
+     * Agrega un nuevo elemento al final de la cola.
      *
-     * @param element The element to be added.
+     * @param element El elemento a añadir.
      */
     public void enqueue(E element) {
         Node<E> newNode = new Node<>(element, null);
@@ -83,9 +83,9 @@ public class CustomQueue<E> {
     }
 
     /**
-     * Removes and returns the element at the front of the queue.
+     * Elimina y devuelve el elemento al frente de la cola.
      *
-     * @return The element at the front of the queue, or {@code null} if the queue is empty.
+     * @return El elemento al frente de la cola, o {@code null} si la cola está vacía.
      */
     public E dequeue() {
         if (isEmpty()) {
@@ -102,9 +102,9 @@ public class CustomQueue<E> {
     }
 
     /**
-     * Retrieves, but does not remove, the head of this queue, or returns {@code null} if this queue is empty.
+     * Obtiene, pero no elimina, la cabeza de esta cola, o devuelve {@code null} si esta cola está vacía.
      *
-     * @return The head of the queue, or {@code null} if the queue is empty.
+     * @return La cabeza de la cola, o {@code null} si la cola está vacía.
      */
     public E peek() {
         if (isEmpty()) {
@@ -113,6 +113,12 @@ public class CustomQueue<E> {
         return head.element;
     }
 
+    /**
+     * Actualiza un elemento en la cola con un nuevo valor.
+     *
+     * @param oldElement El elemento a buscar y reemplazar.
+     * @param newElement El nuevo elemento que reemplazará al anterior.
+     */
     public void updateElement(E oldElement, E newElement) {
         if (isEmpty() || oldElement == null || newElement == null) {
             return;
@@ -129,13 +135,13 @@ public class CustomQueue<E> {
     }
 
     /**
-     * Converts the queue into a {@link List}.
-     * This method traverses the queue from head to tail and adds each element
-     * to a new list, maintaining the FIFO (First In, First Out) order of the elements.
+     * Convierte la cola en una {@link List}.
+     * Este método recorre la cola desde el inicio hasta el final y agrega cada elemento
+     * a una nueva lista, manteniendo el orden FIFO (First In, First Out) de los elementos.
      *
-     * @return A new {@link List} containing all the elements of the queue
-     *         in the same order. The returned list is a new instance and any modifications
-     *         to it will not affect the original queue.
+     * @return Una nueva {@link List} que contiene todos los elementos de la cola
+     *         en el mismo orden. La lista devuelta es una nueva instancia y cualquier modificación
+     *         a ella no afectará la cola original.
      */
     public List<E> toList() {
         List<E> list = new ArrayList<>();
@@ -149,6 +155,13 @@ public class CustomQueue<E> {
         return list;
     }
 
+    /**
+     * Obtiene el elemento en la posición especificada en la cola.
+     *
+     * @param i El índice del elemento que se desea obtener.
+     * @return El elemento en la posición especificada.
+     * @throws IndexOutOfBoundsException Si el índice está fuera de los límites de la cola.
+     */
     public E get(int i) {
         if (i < 0 || i >= size) {
             throw new IndexOutOfBoundsException("Index: " + i + ", Size: " + size);
@@ -161,6 +174,12 @@ public class CustomQueue<E> {
         return current.element;
     }
 
+
+    /**
+     * Elimina la primera ocurrencia del elemento dado de la cola.
+     *
+     * @param element El elemento a eliminar.
+     */
     public void remove(E element) {
         // Manejar casos especiales: cola vacía o elemento en la cabeza
         if (isEmpty() || element == null) {
