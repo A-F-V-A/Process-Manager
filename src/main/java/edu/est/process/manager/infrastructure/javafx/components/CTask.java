@@ -4,17 +4,13 @@ import edu.est.process.manager.domain.models.Activity;
 import edu.est.process.manager.domain.models.CustomProcess;
 import edu.est.process.manager.domain.models.ProcessManager;
 import edu.est.process.manager.domain.models.Task;
-import edu.est.process.manager.domain.structures.CustomDoublyLinkedList;
 import edu.est.process.manager.infrastructure.javafx.util.NodeExplorer;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -25,13 +21,14 @@ public class CTask {
     private final Activity activity;
     private Task task;
     private String idProcess;
+    private VBox container;
+
     public CTask (ProcessManager manager,Activity activity,Task task,String id){
         this.manager = manager;
         this.activity = activity;
         this.task = task;
         this.idProcess = id;
     }
-
     public VBox render() {
         VBox taskCard = new VBox();
         taskCard.setSpacing(10);
@@ -151,5 +148,9 @@ public class CTask {
         int minutes = time % 60;
 
         return String.format("%d:%02d", hours, minutes);
+    }
+
+    public void setContainer(VBox container) {
+        this.container = container;
     }
 }

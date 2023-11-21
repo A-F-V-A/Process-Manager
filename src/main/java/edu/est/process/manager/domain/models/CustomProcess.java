@@ -7,6 +7,7 @@ import edu.est.process.manager.domain.util.IDGenerator;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.PrimitiveIterator;
 
 public class CustomProcess {

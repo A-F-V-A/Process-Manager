@@ -11,7 +11,7 @@ class NotificacionEmailTest {
     @Test
     void testNotifyEmail_TaskExpired() {
         Task task = new Task("Tarea 1",TaskStatus.PENDING, 5); // Tarea con duración de 5 minutos
-        NotificacionEmail notification = new NotificacionEmail("xxsigfridxxx@gmail.com", "Recordatorio", task);
+        NotificacionEmail notification = new NotificacionEmail("xxsigfridxxx@gmail.com", "Recordatorio");
 
         // Avanzar el tiempo para que la tarea expire
         advanceTime(task, 6);
@@ -25,7 +25,7 @@ class NotificacionEmailTest {
     @Test
     void testNotifyEmail_TaskAlmostExpired() {
         Task task = new Task("Tarea 2",TaskStatus.PENDING, 10); // Tarea con duración de 10 minutos
-        NotificacionEmail notification = new NotificacionEmail("xxsigfridxxx@gmail.com", "Recordatorio", task);
+        NotificacionEmail notification = new NotificacionEmail("xxsigfridxxx@gmail.com", "Recordatorio");
 
         // Avanzar el tiempo para estar cerca del 20% del tiempo
         advanceTime(task, 2);
@@ -39,7 +39,7 @@ class NotificacionEmailTest {
     @Test
     void testNotifyEmail_TaskWithinNotificationThreshold() {
         Task task = new Task("Tarea 3",TaskStatus.PENDING, 10); // Tarea con duración de 10 minutos
-        NotificacionEmail notification = new NotificacionEmail("xxsigfridxxx@gmail.com", "Recordatorio", task);
+        NotificacionEmail notification = new NotificacionEmail("xxsigfridxxx@gmail.com", "Recordatorio");
 
         // Avanzar el tiempo al 20% del tiempo para notificar
         advanceTime(task, 2);
@@ -53,7 +53,7 @@ class NotificacionEmailTest {
     @Test
     void testSendEmail() {
         Task task = new Task("Tarea de prueba", TaskStatus.PENDING, 15);
-        NotificacionEmail notification = new NotificacionEmail("correonotificacionprocesos@gmail.com", "Prueba de correo", task);
+        NotificacionEmail notification = new NotificacionEmail("correonotificacionprocesos@gmail.com", "Prueba de correo");
 
         // Envía el correo y maneja posibles excepciones
         try {
