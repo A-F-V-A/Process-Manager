@@ -216,7 +216,6 @@ public class CActivity {
 
     }
     private void handleViewAction() {
-        System.out.println(container);
         ScrollPane scrollPane = findScrollPaneParent(container.getParent());
         if (scrollPane != null) {
             String id = process.getId() + "|" + activity.getId();
