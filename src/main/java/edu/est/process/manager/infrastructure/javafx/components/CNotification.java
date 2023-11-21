@@ -24,7 +24,7 @@ public class CNotification {
 
     public CNotification(Notification notificationApp) {
         this.notificationApp = notificationApp;
-        this.notificacionEmail = new NotificacionEmail(notificacionEmail.getEmailAddress(), " ");
+        this.notificacionEmail = new NotificacionEmail("", " ");
     }
 
     public CNotification() {
@@ -120,12 +120,17 @@ public class CNotification {
 
         if (appNotificationSelected) {
             Task taskApp = new Task();
-            notificationApp.subscribe(taskApp);
+            CAlert.Alert(Alert.AlertType.CONFIRMATION,"App notification","Saved successfully","");
+            taskApp.setDurationMinutes(percentage);
         }
 
         if (emailNotificationSelected) {
             Task taskEmail = new Task();
-            notificacionEmail.sendEmail(emailAddress, taskEmail, "Mensaje de notificacion");
+            String asunt = "Notificación de Confirmación";
+            CAlert.Alert(Alert.AlertType.CONFIRMATION,"E-mail confirmation","Saved successfully","");
+            notificacionEmail = new NotificacionEmail(emailAddress, "Mensaje de notificación");
+            notificacionEmail.sendEmail(emailAddress, taskEmail, "Correo guardado satisfactoriamente", asunt);
+            notificacionEmail.notifyEmail(percentage);
         }
     }
 

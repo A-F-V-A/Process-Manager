@@ -91,7 +91,7 @@ public class LibraryController implements Initializable {
         navActive(source.getId());
         clear();
         Notification();
-        CAlert.Alert(Alert.AlertType.WARNING,"Alerta Tiempo","Hola Soy una alerta","Cierrame");
+//        CAlert.Alert(Alert.AlertType.WARNING,"Alerta Tiempo","Hola Soy una alerta","Cierrame");
     }
 
     @FXML

@@ -36,15 +36,15 @@ public class NotificacionEmail {
      * @param task          Tarea asociada al correo electrónico.
      * @param m             Mensaje del correo electrónico.
      */
-    public void sendEmail(String emailAddress, Task task, String m) {
+    public void sendEmail(String emailAddress, Task task, String m, String asunto) {
         try {
             Email email = new HtmlEmail();
             email.setHostName("smtp.gmail.com");
-            email.setSmtpPort(587 );
+            email.setSmtpPort(587);
             email.setAuthenticator(new DefaultAuthenticator("correonotificacionprocesos@gmail.com", "bnsadbhfuyfjotuo"));
             email.setSSLOnConnect(true);
-            email.setFrom("xxsigfridxxx@gmail.com");
-            email.setSubject("Recordatorio de tarea");
+            email.setFrom(emailAddress);
+            email.setSubject(asunto);
             email.setMsg(m);
             email.addTo(emailAddress);
             email.send();
@@ -61,16 +61,20 @@ public class NotificacionEmail {
      */
     public synchronized void notifyEmail(double notificationThreshold) {
         if (active) {
+            if (notificationThreshold < 0 || notificationThreshold > 100) {
+                System.out.println("El porcentaje debe estar entre 0 y 100");
+                return; //Salimos si el porcentaje no es está en un rango válido
+            }
+
             double remainingTime = task.getDurationMinutes();
-            double timeToNotify = remainingTime * notificationThreshold / 100.0;
+            double timeToNotify = (remainingTime * notificationThreshold) /100;
 
             if (remainingTime <= 0) {
-                sendEmail(emailAddress, task, "La tarea '" + task.getDescription() + "' ha expirado.");
+                sendEmail(emailAddress, task, "La tarea " + task.getId() + "ha expirado", "Finalización de tarea");
                 task.setStatus(TaskStatus.DELAYED);
-                active = false; // Desactiva la notificación después de enviar el correo por expiración
+                active = false;
             } else if (remainingTime <= timeToNotify && remainingTime > 0) {
-                sendEmail(emailAddress, task, "La tarea '" + task.getDescription() + "' está por expirar en " + remainingTime + " minutos.");
-                active = false; // Desactiva la notificación después de enviar el correo por estar cerca de expirar
+                sendEmail(emailAddress, task, "La tarea " + task.getDescription() + "Esta por finalizar" , "Recordatorio de tarea");
             }
         }
     }
