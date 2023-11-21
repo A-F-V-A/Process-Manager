@@ -219,10 +219,10 @@ public class CActivity {
         System.out.println(container);
         ScrollPane scrollPane = findScrollPaneParent(container.getParent());
         if (scrollPane != null) {
-
+            String id = process.getId() + "|" + activity.getId();
             VBox tasksContainer = renderTasks();
             tasksContainer.getStyleClass().add("task-view");
-            tasksContainer.setId(activity.getId());
+            tasksContainer.setId(id);
             scrollPane.setContent(tasksContainer);
             scrollPane.setFitToWidth(true);
         }

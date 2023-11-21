@@ -48,7 +48,33 @@ public class LibraryController implements Initializable {
         ViewProcess();
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.startsWith(" "))  searchField.setText(newValue);
-            else onSearchTextChanged(newValue.trim());
+            else {
+                List<Node> activityFilter = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("activity-filter"));
+
+                if (activityFilter.size() == 1 && activityFilter.get(0) instanceof VBox){
+                    VBox vBoxNode = (VBox) activityFilter.get(0);
+                    CustomProcess process = manager.getProcess(vBoxNode.getId());
+                    List<Activity> activities = process.getActivities().findAll(act ->
+                            act.getName().toLowerCase().contains(newValue.trim().toLowerCase())
+                    );
+                    if (!activities.isEmpty()) {
+                        vBoxNode.getChildren().clear();
+                        for (Activity act : activities) {
+                            CActivity activity = new CActivity(process, act, manager);
+                            vBoxNode.getChildren().add(activity.render());
+                            activity.setContainer(vBoxNode);
+                        }
+                    }
+                }
+                else{
+                    List<Node> task = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("task-view"));
+                    if(task.size() == 1 && task.get(0) instanceof  VBox){
+                        VBox root = (VBox) task.get(0);
+                        pendingTasks(root,newValue.trim().toLowerCase());
+                        completedTasks(root,newValue.trim().toLowerCase());
+                    }
+                }
+            }
         });
     }
 
@@ -76,100 +102,48 @@ public class LibraryController implements Initializable {
         clear();
         ExportImport(file);
     }
+    private void pendingTasks(VBox root, String name){
+        List<Node> taskPending = NodeExplorer.findNodes(root, node -> node.getStyleClass().contains("pending-tasks-container"));
+        if(taskPending.size() == 1 && taskPending.get(0) instanceof VBox){
+            VBox container = (VBox) taskPending.get(0);
+            String idProcess = root.getId().split("\\|")[0];
+            String idActivity = root.getId().split("\\|")[1];
 
-    //Se presenta un problema el cual los vBoxTaskPending y vBoxTaskCompleted entran como nulos
-    private void onSearchTextChanged(String newText) {
-        List<Node> nodeFilter = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("activity-filter"));
-        List<Node> nodeFilterTask = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("task-view"));
+            CustomProcess process =  manager.getProcess(idProcess);
+            Activity activity = process.getActivity(idActivity);
+            List<Task> tasks = activity.getPendingTasks().filter(task ->
+                    task.getDescription().toLowerCase().contains(name));
 
-        if (nodeFilter.size() == 1 && nodeFilter.get(0) instanceof VBox) {
-            VBox vBoxNode = (VBox) nodeFilter.get(0);
-            CustomProcess process = manager.getProcess(vBoxNode.getId());
-            List<Activity> activities = process.getActivities().findAll(act ->
-                    act.getName().toLowerCase().contains(newText.toLowerCase())
-            );
-            if (!activities.isEmpty()) {
-                vBoxNode.getChildren().clear();
-                for (Activity act : activities) {
-                    CActivity activity = new CActivity(process, act, manager);
-                    vBoxNode.getChildren().add(activity.render());
-                    activity.setContainer(vBoxNode);
+            if (!tasks.isEmpty()) {
+                container.getChildren().clear();
+                for (Task task : tasks) {
+                    CTask tk = new CTask(manager,activity,task,process.getId());
+                    container.getChildren().add(tk.render());
                 }
-            }
-
-        } else if (nodeFilterTask.size() == 1 && nodeFilterTask.get(0) instanceof VBox) {
-            List<Node> nodeTaskPending = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("pending-tasks-container"));
-
-            if (nodeTaskPending.size() == 1 && nodeTaskPending.get(0) instanceof VBox) {
-                VBox vBoxTaskPending = (VBox) nodeTaskPending.get(0);
-                CustomProcess process = manager.getProcess(vBoxTaskPending.getId());
-                if (process != null) {
-                    List<Activity> activities = process.getActivities().findAll(activity ->
-                            activity.getName().toLowerCase().contains(newText.toLowerCase())
-                    );
-
-                    List<Task> tasksPending = new ArrayList<>();
-                    for (Activity activity : activities) {
-                        List<Task> pendingTasks = activity.getPendingTasksAsList();
-                        for (Task task : pendingTasks) {
-                            if (task.getDescription().toLowerCase().contains(newText.toLowerCase())) {
-                                tasksPending.add(task);
-                            }
-                        }
-                    }
-
-                    if (!tasksPending.isEmpty()) {
-                        vBoxTaskPending.getChildren().clear();
-                        for (Task task : tasksPending) {
-                            CTask task1 = new CTask(manager, (Activity) activities, task, "1");
-                            vBoxTaskPending.getChildren().add(task1.render());
-                            task1.setContainer(vBoxTaskPending);
-                        }
-                    }
-                } else {
-                    // Manejar si el proceso es nulo
-                    System.out.println("El proceso asociado a vBoxTaskPending es null");
-                }
-            }
-            List<Node> NodeTaskCompleted = NodeExplorer.findNodes(p_container, node -> node.getStyleClass().contains("completed-tasks-container"));
-
-            if (NodeTaskCompleted.size() == 1 && NodeTaskCompleted.get(0) instanceof VBox) {
-                VBox vBoxTaskCompleted = (VBox) NodeTaskCompleted.get(0);
-                CustomProcess process = manager.getProcess(vBoxTaskCompleted.getId());
-                if (process != null) {
-                    List<Activity> activities = process.getActivities().findAll(activity ->
-                            activity.getName().toLowerCase().contains(newText.toLowerCase())
-                    );
-
-                    List<Task> tasksCompleted = new ArrayList<>();
-                    for (Activity activity : activities) {
-                        List<Task> completedTask = activity.getCompletedTasksAsList();
-                        for (Task task : completedTask) {
-                            if (task.getDescription().toLowerCase().contains(newText.toLowerCase())) {
-                                completedTask.add(task);
-                            }
-                        }
-                    }
-
-                    if (!tasksCompleted.isEmpty()) {
-                        vBoxTaskCompleted.getChildren().clear();
-                        for (Task task : tasksCompleted) {
-                            CTask task1 = new CTask(manager, (Activity) activities, task, "1");
-                            vBoxTaskCompleted.getChildren().add(task1.render());
-                            task1.setContainer(vBoxTaskCompleted);
-                        }
-                    }
-                } else {
-                    // Manejar si el proceso es nulo
-                    System.out.println("El proceso asociado a vBoxTaskCompleted es null");
-                }
-            } else {
-                System.out.println("No se encontró exactamente un VBox con la clase 'activity-filter'");
             }
         }
     }
+    private void completedTasks(VBox root, String name){
+        List<Node> taskCompleted = NodeExplorer.findNodes(root, node -> node.getStyleClass().contains("completed-tasks-container"));
+        if(taskCompleted.size() == 1 && taskCompleted.get(0) instanceof VBox){
+            VBox container = (VBox) taskCompleted.get(0);
+            String idProcess = root.getId().split("\\|")[0];
+            String idActivity = root.getId().split("\\|")[1];
 
+            CustomProcess process =  manager.getProcess(idProcess);
+            Activity activity = process.getActivity(idActivity);
+            List<Task> tasks = activity.getCompletedTasks().filter(task ->
+                    task.getDescription().toLowerCase().contains(name));
 
+            if (!tasks.isEmpty()) {
+                container.getChildren().clear();
+                for (Task task : tasks) {
+                    CTask tk = new CTask(manager,activity,task,process.getId());
+                    container.getChildren().add(tk.renderCompleted());
+                }
+            }
+        }
+    }
 
     private void ViewProcess(){
 
@@ -240,7 +214,6 @@ public class LibraryController implements Initializable {
         component.setLayoutX(xPosition);
         component.setLayoutY(yPosition);
     }
-
     private boolean nodeExists(String id) {
         for (Node child : p_container.getChildren()) {
             if (id.equals(child.getId())) {
